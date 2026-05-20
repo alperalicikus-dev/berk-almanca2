@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Berk — Almanca B2/C1 Hazırlık</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ed;
+  --bg2: #ede9e1;
+  --bg3: #e3ddd3;
+  --ink: #1a1714;
+  --ink2: #4a4540;
+  --ink3: #9a948c;
+  --white: #ffffff;
+  --schreiben: #c84b2f;
+  --schreiben-bg: #fef0ec;
+  --lesen: #1a6b8a;
+  --lesen-bg: #e6f4f9;
+  --horen: #2a7a5a;
+  --horen-bg: #e6f5ee;
+  --sprechen: #7a5abf;
+  --sprechen-bg: #f0ecfb;
+  --gramm: #8a6a1a;
+  --gramm-bg: #fef8e6;
+  --radius: 12px;
+  --shadow: 0 2px 16px rgba(26,23,20,0.07);
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Outfit', sans-serif;
+  --serif: 'Instrument Serif', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* TOP */
+.top-bar {
+  background: var(--ink);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.top-logo {
+  display: flex; flex-direction: column;
+}
+.top-logo-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: white;
+  letter-spacing: -.3px;
+}
+.top-logo-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,.4);
+  letter-spacing: .08em;
+  margin-top: 1px;
+}
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.streak-box {
+  background: rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 7px 14px;
+  text-align: center;
+}
+.streak-num {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: #f0b96a;
+  line-height: 1;
+}
+.streak-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,.4);
+  letter-spacing: .08em;
+  margin-top: 1px;
+}
+.level-sel {
+  display: flex;
+  background: rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.lvl-btn {
+  padding: 5px 16px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,.5);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all .2s;
+  letter-spacing: .08em;
+}
+.lvl-btn.active { background: white; color: var(--ink); }
+
+/* DATE BANNER */
+.date-banner {
+  background: var(--bg2);
+  padding: 10px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--bg3);
+}
+.date-txt {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  letter-spacing: .06em;
+}
+.overall-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+}
+.overall-bar {
+  width: 120px;
+  height: 5px;
+  background: var(--bg3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.overall-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ink);
+  transition: width .5s;
+}
+
+/* MAIN */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* DAILY PLAN */
+.daily-plan {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.plan-header {
+  padding: 16px 22px;
+  background: var(--ink);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.plan-header-left { display: flex; flex-direction: column; gap: 2px; }
+.plan-header-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+}
+.plan-header-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: white;
+}
+.btn-generate-plan {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .04em;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-generate-plan:hover { background: rgba(255,255,255,.2); }
+.plan-body {
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.plan-slot {
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1.5px solid transparent;
+  transition: all .2s;
+  cursor: pointer;
+  position: relative;
+}
+.plan-slot:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.plan-slot.done { opacity: .65; }
+.plan-slot.done::after {
+  content: '✓';
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 14px;
+  color: inherit;
+  opacity: .5;
+}
+.ps-schreiben { background: var(--schreiben-bg); border-color: rgba(200,75,47,.2); }
+.ps-lesen { background: var(--lesen-bg); border-color: rgba(26,107,138,.2); }
+.ps-horen { background: var(--horen-bg); border-color: rgba(42,122,90,.2); }
+.ps-sprechen { background: var(--sprechen-bg); border-color: rgba(122,90,191,.2); }
+.ps-gramm { background: var(--gramm-bg); border-color: rgba(138,106,26,.2); }
+.ps-wort { background: var(--gramm-bg); border-color: rgba(138,106,26,.15); }
+.slot-icon { font-size: 18px; }
+.slot-name {
+  font-weight: 600;
+  font-size: 13px;
+}
+.ps-schreiben .slot-name { color: var(--schreiben); }
+.ps-lesen .slot-name { color: var(--lesen); }
+.ps-horen .slot-name { color: var(--horen); }
+.ps-sprechen .slot-name { color: var(--sprechen); }
+.ps-gramm .slot-name { color: var(--gramm); }
+.ps-wort .slot-name { color: var(--gramm); }
+.slot-dur {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: .04em;
+}
+.slot-task {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.4;
+}
+.slot-bar-bg { height: 3px; background: rgba(0,0,0,.08); border-radius: 2px; margin-top: 4px; }
+.slot-bar { height: 3px; border-radius: 2px; background: currentColor; opacity: .5; transition: width .4s; }
+
+/* MODULE GRID */
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.module-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .2s;
+}
+.module-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,23,20,0.1); }
+.mc-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mc-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.mc-schreiben { background: var(--schreiben-bg); }
+.mc-lesen { background: var(--lesen-bg); }
+.mc-horen { background: var(--horen-bg); }
+.mc-sprechen { background: var(--sprechen-bg); }
+.mc-info { flex: 1; }
+.mc-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+.mc-schreiben .mc-name { color: var(--schreiben); }
+.mc-lesen .mc-name { color: var(--lesen); }
+.mc-horen .mc-name { color: var(--horen); }
+.mc-sprechen .mc-name { color: var(--sprechen); }
+.mc-sub { font-size: 12px; color: var(--ink3); font-family: var(--mono); }
+.mc-arrow { font-size: 16px; color: var(--ink3); }
+.mc-body {
+  padding: 0 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mc-progress-row { display: flex; align-items: center; gap: 10px; }
+.mc-prog-bar-bg { flex: 1; height: 5px; background: var(--bg2); border-radius: 3px; overflow: hidden; }
+.mc-prog-bar { height: 100%; border-radius: 3px; transition: width .5s; }
+.bar-schreiben { background: var(--schreiben); }
+.bar-lesen { background: var(--lesen); }
+.bar-horen { background: var(--horen); }
+.bar-sprechen { background: var(--sprechen); }
+.mc-pct { font-family: var(--mono); font-size: 11px; color: var(--ink3); min-width: 32px; text-align: right; }
+.mc-last { font-size: 12px; color: var(--ink3); }
+.mc-open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 7px;
+  border: 1px solid currentColor;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  transition: all .15s;
+  margin-top: 4px;
+  letter-spacing: .04em;
+  width: fit-content;
+}
+.mc-schreiben .mc-open-btn { color: var(--schreiben); }
+.mc-lesen .mc-open-btn { color: var(--lesen); }
+.mc-horen .mc-open-btn { color: var(--horen); }
+.mc-sprechen .mc-open-btn { color: var(--sprechen); }
+.mc-open-btn:hover { opacity: .7; }
+
+/* STATS ROW */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+.stat-num {
+  font-family: var(--serif);
+  font-size: 32px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: .07em; text-transform: uppercase; }
+.stat-trend { font-size: 12px; color: var(--horen); margin-top: 4px; }
+
+/* WORT DES TAGES */
+.wort-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.wort-icon { font-size: 28px; }
+.wort-body { flex: 1; }
+.wort-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+.wort-main { font-family: var(--serif); font-size: 24px; color: var(--ink); font-style: italic; margin-bottom: 4px; }
+.wort-info { font-size: 13px; color: var(--ink2); line-height: 1.5; }
+.wort-beispiel { font-size: 12px; color: var(--ink3); font-style: italic; margin-top: 6px; }
+.btn-new-wort {
+  background: transparent;
+  border: 1px solid var(--bg3);
+  color: var(--ink3);
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+  align-self: center;
+}
+.btn-new-wort:hover { border-color: var(--ink3); color: var(--ink); }
+.spinner { width:18px;height:18px;border:2px solid var(--bg3);border-top-color:var(--ink3);border-radius:50%;animation:spin .7s linear infinite;display:inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* AI PLAN RESULT */
+.plan-result {
+  padding: 12px 22px;
+  background: var(--bg);
+  border-top: 1px solid var(--bg3);
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.6;
+  display: none;
+}
+.plan-result.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-logo">
+    <div class="top-logo-name">Berk'in Almanca Paneli</div>
+    <div class="top-logo-sub">TELC B2 / C1 · Günlük 4 Saat · Tamamen Almanca</div>
+  </div>
+  <div class="top-right">
+    <div class="streak-box">
+      <div class="streak-num" id="streak-num">0</div>
+      <div class="streak-lbl">GÜN SERİSİ</div>
+    </div>
+    <div class="level-sel">
+      <button class="lvl-btn active" onclick="setLevel('B2')" id="lvl-b2">B2</button>
+      <button class="lvl-btn" onclick="setLevel('C1')" id="lvl-c1">C1</button>
+    </div>
+  </div>
+</div>
+
+<!-- DATE BANNER -->
+<div class="date-banner">
+  <div class="date-txt" id="date-txt">Mittwoch, 20. Mai 2026</div>
+  <div class="overall-progress">
+    <span>Tagesziel:</span>
+    <div class="overall-bar"><div class="overall-fill" id="overall-fill" style="width:0%"></div></div>
+    <span id="overall-pct">0%</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- DAILY PLAN -->
+  <div class="daily-plan">
+    <div class="plan-header">
+      <div class="plan-header-left">
+        <div class="plan-header-label">Tagesplan · 4 Stunden</div>
+        <div class="plan-header-title">Günlük Çalışma Planı</div>
+      </div>
+      <button class="btn-generate-plan" onclick="generateDailyPlan()">✦ Plan oluştur</button>
+    </div>
+    <div class="plan-body" id="plan-body">
+      <div style="grid-column:1/-1;padding:12px;text-align:center;color:var(--ink3);font-size:13px;font-style:italic">
+        „Plan oluştur" butonuna tıkla — AI bugünün zayıf alanlarına göre 4 saatlik program hazırlasın.
+      </div>
+    </div>
+    <div class="plan-result" id="plan-result"></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total-sessions">0</div>
+      <div class="stat-lbl">Toplam Oturum</div>
+      <div class="stat-trend" id="stat-today">Bugün: 0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-schreiben-avg">—</div>
+      <div class="stat-lbl">Schreiben Ø</div>
+      <div class="stat-trend">Son 7 gün</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-lesen-avg">—</div>
+      <div class="stat-lbl">Lesen Ø</div>
+      <div class="stat-trend">Son 7 gün</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-horen-avg">—</div>
+      <div class="stat-lbl">Hören Ø</div>
+      <div class="stat-trend">Son 7 gün</div>
+    </div>
+  </div>
+
+  <!-- WORT DES TAGES -->
+  <div class="wort-card">
+    <div class="wort-icon">📖</div>
+    <div class="wort-body">
+      <div class="wort-label">Wort des Tages</div>
+      <div class="wort-main" id="wort-main">…</div>
+      <div class="wort-info" id="wort-info">Klicke auf „Neues Wort" um ein C1-Wort zu laden.</div>
+      <div class="wort-beispiel" id="wort-beispiel"></div>
+    </div>
+    <button class="btn-new-wort" onclick="getNewWord()" id="btn-wort">Neues Wort</button>
+  </div>
+
+  <!-- MODULES -->
+  <div class="module-grid">
+
+    <!-- SCHREIBEN -->
+    <div class="module-card mc-schreiben" onclick="openModule('schreiben')">
+      <div class="mc-header">
+        <div class="mc-icon mc-schreiben">✍️</div>
+        <div class="mc-info">
+          <div class="mc-name">Schreiben</div>
+          <div class="mc-sub">E-Mail (B2) · Erörterung (C1)</div>
+        </div>
+        <div class="mc-arrow">→</div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-progress-row">
+          <div class="mc-prog-bar-bg"><div class="mc-prog-bar bar-schreiben" id="bar-s" style="width:0%"></div></div>
+          <div class="mc-pct" id="pct-s">0%</div>
+        </div>
+        <div class="mc-last" id="last-s">Noch keine Übung</div>
+        <button class="mc-open-btn">Öffnen →</button>
+      </div>
+    </div>
+
+    <!-- LESEN -->
+    <div class="module-card mc-lesen" onclick="openModule('lesen')">
+      <div class="mc-header">
+        <div class="mc-icon mc-lesen">📖</div>
+        <div class="mc-info">
+          <div class="mc-name">Lesen</div>
+          <div class="mc-sub">Global · Detail · Selektiv</div>
+        </div>
+        <div class="mc-arrow">→</div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-progress-row">
+          <div class="mc-prog-bar-bg"><div class="mc-prog-bar bar-lesen" id="bar-l" style="width:0%"></div></div>
+          <div class="mc-pct" id="pct-l">0%</div>
+        </div>
+        <div class="mc-last" id="last-l">Noch keine Übung</div>
+        <button class="mc-open-btn">Öffnen →</button>
+      </div>
+    </div>
+
+    <!-- HÖREN -->
+    <div class="module-card mc-horen" onclick="openModule('horen')">
+      <div class="mc-header">
+        <div class="mc-icon mc-horen">🎧</div>
+        <div class="mc-info">
+          <div class="mc-name">Hören</div>
+          <div class="mc-sub">Nachrichten · Interview · Diskussion</div>
+        </div>
+        <div class="mc-arrow">→</div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-progress-row">
+          <div class="mc-prog-bar-bg"><div class="mc-prog-bar bar-horen" id="bar-h" style="width:0%"></div></div>
+          <div class="mc-pct" id="pct-h">0%</div>
+        </div>
+        <div class="mc-last" id="last-h">Noch keine Übung</div>
+        <button class="mc-open-btn">Öffnen →</button>
+      </div>
+    </div>
+
+    <!-- SPRECHEN -->
+    <div class="module-card mc-sprechen" onclick="openModule('sprechen')">
+      <div class="mc-header">
+        <div class="mc-icon mc-sprechen">🎤</div>
+        <div class="mc-info">
+          <div class="mc-name">Sprechen</div>
+          <div class="mc-sub">Präsentation · Diskussion · Planung</div>
+        </div>
+        <div class="mc-arrow">→</div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-progress-row">
+          <div class="mc-prog-bar-bg"><div class="mc-prog-bar bar-sprechen" id="bar-sp" style="width:0%"></div></div>
+          <div class="mc-pct" id="pct-sp">0%</div>
+        </div>
+        <div class="mc-last" id="last-sp">Noch keine Übung</div>
+        <button class="mc-open-btn">Öffnen →</button>
+      </div>
+    </div>
+
+    <!-- WORTSCHATZ -->
+    <div class="module-card" style="border-color:rgba(138,106,26,.2)" onclick="openModule('wortschatz')">
+      <div class="mc-header">
+        <div class="mc-icon" style="background:#fef8e6">📚</div>
+        <div class="mc-info">
+          <div class="mc-name" style="color:#8a6a1a">Wortschatz</div>
+          <div class="mc-sub">Flashcards · Spaced Repetition · Quiz</div>
+        </div>
+        <div class="mc-arrow">→</div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-progress-row">
+          <div class="mc-prog-bar-bg"><div class="mc-prog-bar" id="bar-w" style="width:0%;background:#8a6a1a"></div></div>
+          <div class="mc-pct" id="pct-w">0 Wörter</div>
+        </div>
+        <div class="mc-last" id="last-w">Deck noch leer — Wörter hinzufügen</div>
+        <button class="mc-open-btn" style="color:#8a6a1a;border-color:#8a6a1a">Öffnen →</button>
+      </div>
+    </div>
+
+    <!-- GRAMMATIK -->
+    <div class="module-card" style="border-color:rgba(26,122,138,.2)" onclick="openModule('grammatik')">
+      <div class="mc-header">
+        <div class="mc-icon" style="background:#e6fafa">📐</div>
+        <div class="mc-info">
+          <div class="mc-name" style="color:#1a7a8a">Grammatik</div>
+          <div class="mc-sub">Lücken · MC · Umformung · 6+ Themen</div>
+        </div>
+        <div class="mc-arrow">→</div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-progress-row">
+          <div class="mc-prog-bar-bg"><div class="mc-prog-bar" id="bar-g" style="width:0%;background:#1a7a8a"></div></div>
+          <div class="mc-pct" id="pct-g">0 XP</div>
+        </div>
+        <div class="mc-last" id="last-g">Noch keine Übung</div>
+        <button class="mc-open-btn" style="color:#1a7a8a;border-color:#1a7a8a">Öffnen →</button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+let level = 'B2';
+let completedToday = 0;
+let stats = {
+  schreiben: JSON.parse(localStorage.getItem('schreibtrainer_stats') || '{"texts":0,"scores":[],"words":[]}'),
+  lesen:     JSON.parse(localStorage.getItem('lesen_prog') || '{"global":[],"detail":[],"selektiv":[],"implizit":[]}'),
+  sprechen:  JSON.parse(localStorage.getItem('sprechen_stats') || '{"sessions":0,"scores":[]}'),
+};
+let streak = parseInt(localStorage.getItem('schreibtrainer_streak') || '0');
+
+function init() {
+  // Date
+  const now = new Date();
+  const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  document.getElementById('date-txt').textContent = `${days[now.getDay()]}, ${now.getDate()}. ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+  document.getElementById('streak-num').textContent = streak;
+
+  updateStats();
+  loadWord();
+}
+
+function setLevel(lvl) {
+  level = lvl;
+  document.getElementById('lvl-b2').classList.toggle('active', lvl==='B2');
+  document.getElementById('lvl-c1').classList.toggle('active', lvl==='C1');
+}
+
+function updateStats() {
+  // Total sessions
+  const total = (stats.schreiben.texts||0) + (stats.sprechen.sessions||0);
+  document.getElementById('stat-total-sessions').textContent = total;
+
+  // Schreiben avg
+  if (stats.schreiben.scores?.length) {
+    const avg = Math.round(stats.schreiben.scores.slice(-7).reduce((a,b)=>a+b,0)/Math.min(7,stats.schreiben.scores.length));
+    document.getElementById('stat-schreiben-avg').textContent = avg + '%';
+    document.getElementById('pct-s').textContent = avg + '%';
+    document.getElementById('bar-s').style.width = avg + '%';
+    document.getElementById('last-s').textContent = `${stats.schreiben.texts} Texte geschrieben`;
+  }
+
+  // Lesen avg
+  const lesenScores = [...(stats.lesen.global||[]), ...(stats.lesen.detail||[]), ...(stats.lesen.selektiv||[])];
+  if (lesenScores.length) {
+    const avg = Math.round(lesenScores.slice(-7).reduce((a,b)=>a+b,0)/Math.min(7,lesenScores.length));
+    document.getElementById('stat-lesen-avg').textContent = avg + '%';
+    document.getElementById('pct-l').textContent = avg + '%';
+    document.getElementById('bar-l').style.width = avg + '%';
+    document.getElementById('last-l').textContent = `${lesenScores.length} Aufgaben gelöst`;
+  }
+
+  // Hören — no saved stats yet, placeholder
+  document.getElementById('stat-horen-avg').textContent = '—';
+
+  // Sprechen
+  if (stats.sprechen.sessions > 0) {
+    document.getElementById('pct-sp').textContent = stats.sprechen.sessions + ' Übg';
+    document.getElementById('last-sp').textContent = `${stats.sprechen.sessions} Übungen gemacht`;
+  }
+}
+
+// ── DAILY PLAN ──
+async function generateDailyPlan() {
+  const btn = document.querySelector('.btn-generate-plan');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="margin:0"></div>';
+
+  // Analyze weaknesses from stats
+  const lesenScores = [...(stats.lesen.global||[]), ...(stats.lesen.detail||[])];
+  const lesenAvg = lesenScores.length ? Math.round(lesenScores.slice(-5).reduce((a,b)=>a+b,0)/Math.min(5,lesenScores.length)) : 0;
+  const schreibenAvg = stats.schreiben.scores?.length ? Math.round(stats.schreiben.scores.slice(-5).reduce((a,b)=>a+b,0)/Math.min(5,stats.schreiben.scores.length)) : 0;
+
+  const prompt = `Du bist ein erfahrener TELC ${level} Coach. Erstelle einen optimierten 4-Stunden-Tagesplan für einen ${level}-Kandidaten.
+
+Aktuelle Leistung:
+- Schreiben: ${schreibenAvg || 'Noch keine Daten'}% Ø
+- Lesen: ${lesenAvg || 'Noch keine Daten'}% Ø
+- Hören: Noch keine Daten
+- Sprechen: ${stats.sprechen.sessions || 0} Übungen
+
+Erstelle einen Plan mit genauer Zeitaufteilung. Gib die schwächsten Bereiche mehr Zeit.
+Antworte NUR mit diesem JSON:
+{
+  "slots": [
+    {"modul": "Schreiben", "dauer": 60, "aufgabe": "<konkrete Aufgabe heute>", "klasse": "schreiben"},
+    {"modul": "Lesen", "dauer": 45, "aufgabe": "<konkreter Lesetyp>", "klasse": "lesen"},
+    {"modul": "Hören", "dauer": 45, "aufgabe": "<Höraufgabe>", "klasse": "horen"},
+    {"modul": "Sprechen", "dauer": 45, "aufgabe": "<Sprechaufgabe>", "klasse": "sprechen"},
+    {"modul": "Grammatik", "dauer": 25, "aufgabe": "<Grammatikthema>", "klasse": "gramm"}
+  ],
+  "tipp": "<1 Satz: Wichtigster Fokus heute>"
+}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{role:'user',content:prompt}]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content?.[0]?.text || '';
+    const cleaned = raw.replace(/```json|```/g,'').trim();
+    const plan = JSON.parse(cleaned);
+    renderPlan(plan);
+  } catch(e) {
+    // Fallback plan
+    renderPlan({
+      slots: [
+        {modul:'Schreiben', dauer:60, aufgabe:'Halbformelle E-Mail — Thema: Wohnen & Alltag', klasse:'schreiben'},
+        {modul:'Lesen', dauer:45, aufgabe:'Leseverstehen Teil 2 — Populärwissenschaft', klasse:'lesen'},
+        {modul:'Hören', dauer:45, aufgabe:'Nachrichtensendung — Globalverstehen', klasse:'horen'},
+        {modul:'Sprechen', dauer:45, aufgabe:'Teil 2 — Diskussion über Gesellschaftsthema', klasse:'sprechen'},
+        {modul:'Grammatik', dauer:25, aufgabe:'Konjunktiv II & Passiv üben', klasse:'gramm'},
+      ],
+      tipp: 'Heute Schreiben fokussieren — E-Mail-Struktur und Konnektoren.'
+    });
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '↻ Yenile';
+  }
+}
+
+function renderPlan(plan) {
+  const body = document.getElementById('plan-body');
+  body.innerHTML = plan.slots.map(s => `
+    <div class="plan-slot ps-${s.klasse}" onclick="markDone(this); openModule('${s.klasse}')">
+      <div class="slot-icon">${{schreiben:'✍️',lesen:'📖',horen:'🎧',sprechen:'🎤',gramm:'📐',wort:'📝'}[s.klasse]||'📌'}</div>
+      <div class="slot-name">${s.modul}</div>
+      <div class="slot-dur">${s.dauer} Minuten</div>
+      <div class="slot-task">${s.aufgabe}</div>
+      <div class="slot-bar-bg"><div class="slot-bar" style="width:0%"></div></div>
+    </div>
+  `).join('');
+
+  document.getElementById('plan-result').classList.add('show');
+  document.getElementById('plan-result').innerHTML = `💡 <strong>Tipp für heute:</strong> ${plan.tipp}`;
+}
+
+function markDone(el) {
+  el.classList.toggle('done');
+  completedToday = document.querySelectorAll('.plan-slot.done').length;
+  const total = document.querySelectorAll('.plan-slot').length;
+  const pct = total ? Math.round(completedToday/total*100) : 0;
+  document.getElementById('overall-fill').style.width = pct + '%';
+  document.getElementById('overall-pct').textContent = pct + '%';
+}
+
+// ── OPEN MODULE ──
+function openModule(mod) {
+  const files = {
+    schreiben: 'berk_schreiben_platform.html',
+    lesen:     'berk_lesen_platform.html',
+    horen:     'berk_horen_platform.html',
+    sprechen:  'berk_sprechen_platform.html',
+    wortschatz:'berk_wortschatz_platform.html',
+    grammatik: 'berk_grammatik_platform.html',
+    gramm:     'berk_grammatik_platform.html',
+    wort:      'berk_wortschatz_platform.html',
+  };
+  const f = files[mod];
+  if (f) window.open(f, '_blank');
+}
+
+// ── WORT DES TAGES ──
+async function getNewWord() {
+  const btn = document.getElementById('btn-wort');
+  btn.innerHTML = '<div class="spinner" style="margin:0"></div>';
+  btn.disabled = true;
+
+  const prompt = `Gib mir ein fortgeschrittenes Deutsch-Wort für TELC ${level}-Vorbereitung.
+NUR JSON:
+{
+  "wort": "<Wort oder feste Wendung>",
+  "wortart": "<Substantiv/Verb/Adjektiv/Wendung + Genus wenn zutreffend>",
+  "bedeutung": "<Kurze Erklärung auf Deutsch — 1 Satz>",
+  "beispiel": "<Beispielsatz der das Wort im B2/C1-Kontext zeigt>"
+}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:200,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content?.[0]?.text || '';
+    const cleaned = raw.replace(/```json|```/g,'').trim();
+    const w = JSON.parse(cleaned);
+    document.getElementById('wort-main').textContent = w.wort;
+    document.getElementById('wort-info').innerHTML = `<strong>${w.wortart}</strong> — ${w.bedeutung}`;
+    document.getElementById('wort-beispiel').textContent = `„${w.beispiel}"`;
+  } catch(e) {
+    document.getElementById('wort-main').textContent = 'die Nachhaltigkeit';
+    document.getElementById('wort-info').innerHTML = '<strong>Substantiv (f)</strong> — Eigenschaft, dauerhaft wirtschaftlich, ökologisch und sozial zu handeln.';
+    document.getElementById('wort-beispiel').textContent = '„Nachhaltigkeit ist ein zentrales Thema in der modernen Wirtschaftspolitik."';
+  } finally {
+    btn.innerHTML = 'Neues Wort';
+    btn.disabled = false;
+  }
+}
+
+async function loadWord() {
+  // Load one word on start
+  await getNewWord();
+}
+
+init();
+</script>
+</body>
+</html>

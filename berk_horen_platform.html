@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hören Trainer — TELC B2/C1</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0ece4;
+  --bg2: #e8e3d9;
+  --bg3: #ddd7cb;
+  --ink: #1c1a16;
+  --ink2: #4a4640;
+  --ink3: #8c877e;
+  --teal: #1a6b6b;
+  --teal2: #2a9090;
+  --teal-light: #e0f0f0;
+  --teal-mid: #b0d8d8;
+  --orange: #d4520a;
+  --orange-light: #fde8da;
+  --green: #2a6b3a;
+  --green-light: #d8f0dd;
+  --red: #9b2323;
+  --red-light: #fde8e8;
+  --radius: 10px;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --display: 'Syne', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* HEADER */
+header {
+  background: var(--teal);
+  color: white;
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-wave {
+  width: 32px; height: 20px;
+  display: flex; align-items: flex-end; gap: 2px;
+}
+.logo-wave span {
+  width: 3px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 2px;
+  animation: wave-bar 1.2s ease-in-out infinite;
+}
+.logo-wave span:nth-child(1) { height: 8px; animation-delay: 0s; }
+.logo-wave span:nth-child(2) { height: 16px; animation-delay: .15s; }
+.logo-wave span:nth-child(3) { height: 10px; animation-delay: .3s; }
+.logo-wave span:nth-child(4) { height: 18px; animation-delay: .45s; }
+.logo-wave span:nth-child(5) { height: 6px; animation-delay: .6s; }
+@keyframes wave-bar {
+  0%,100% { opacity: .5; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.4); }
+}
+.header-right { display: flex; gap: 8px; align-items: center; }
+.level-toggle { display: flex; background: rgba(255,255,255,0.15); border-radius: 7px; padding: 3px; gap: 2px; }
+.level-btn {
+  padding: 4px 14px;
+  border: none; background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  cursor: pointer; border-radius: 5px; transition: all .2s; letter-spacing: .08em;
+}
+.level-btn.active { background: white; color: var(--teal); }
+.session-info {
+  background: rgba(255,255,255,0.15);
+  border-radius: 7px;
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: white;
+  letter-spacing: .05em;
+}
+
+/* LAYOUT */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  gap: 20px;
+}
+
+/* SIDEBAR */
+.sidebar { display: flex; flex-direction: column; gap: 14px; }
+.panel {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(28,26,22,0.06);
+}
+.panel-header {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--bg2);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  display: flex; align-items: center; gap: 6px;
+}
+.panel-body { padding: 14px 16px; }
+
+/* TYPE ITEMS */
+.type-list { display: flex; flex-direction: column; gap: 5px; }
+.type-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all .15s;
+}
+.type-item:hover { background: var(--bg); }
+.type-item.selected { background: var(--teal-light); border-color: var(--teal2); }
+.type-name { font-family: var(--display); font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.type-desc { font-family: var(--mono); font-size: 10px; color: var(--ink3); line-height: 1.4; }
+.type-item.selected .type-name { color: var(--teal); }
+
+/* HOW IT WORKS */
+.how-list { display: flex; flex-direction: column; gap: 10px; }
+.how-item { display: flex; gap: 10px; align-items: flex-start; }
+.how-num {
+  width: 20px; height: 20px;
+  background: var(--teal);
+  color: white;
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.how-text { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+
+/* WORKSPACE */
+.workspace { display: flex; flex-direction: column; gap: 18px; }
+
+/* PLAYER CARD */
+.player-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  box-shadow: 0 1px 6px rgba(28,26,22,0.06);
+  overflow: hidden;
+}
+.player-top {
+  background: var(--teal);
+  padding: 18px 22px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.player-info { flex: 1; }
+.player-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 5px;
+}
+.player-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.3;
+}
+.btn-gen-task {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 8px 16px;
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-gen-task:hover { background: rgba(255,255,255,0.25); }
+.btn-gen-task:disabled { opacity: .4; cursor: not-allowed; }
+
+/* TRANSCRIPT AREA */
+.transcript-zone {
+  padding: 0;
+  position: relative;
+}
+.transcript-header {
+  padding: 12px 20px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.transcript-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.reveal-controls { display: flex; gap: 6px; }
+.reveal-step-btn {
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--bg3);
+  background: white;
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all .15s;
+  color: var(--ink2);
+  letter-spacing: .04em;
+}
+.reveal-step-btn:hover { background: var(--teal-light); border-color: var(--teal2); color: var(--teal); }
+.reveal-step-btn.active { background: var(--teal); color: white; border-color: var(--teal); }
+.reveal-step-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.transcript-body {
+  padding: 20px 22px;
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--ink);
+  min-height: 140px;
+}
+.transcript-segment {
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border-radius: 7px;
+  border-left: 3px solid transparent;
+  transition: all .3s;
+  font-style: italic;
+  color: var(--ink2);
+}
+.transcript-segment.hidden {
+  background: var(--bg);
+  border-left-color: var(--bg3);
+  color: var(--ink3);
+  font-style: normal;
+  letter-spacing: .04em;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.transcript-segment.revealed {
+  background: var(--teal-light);
+  border-left-color: var(--teal2);
+  color: var(--ink);
+  font-style: italic;
+}
+.segment-speaker {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--teal);
+  font-style: normal;
+  font-weight: 500;
+  margin-bottom: 3px;
+  letter-spacing: .06em;
+}
+
+/* PLAYHEAD simulation */
+.playhead-bar {
+  height: 3px;
+  background: var(--bg2);
+  margin: 0 22px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.playhead-fill {
+  height: 100%;
+  background: var(--teal2);
+  border-radius: 2px;
+  transition: width .4s ease;
+}
+
+/* AUFGABE NOTE */
+.aufgabe-note {
+  background: var(--orange-light);
+  border-top: 1px solid rgba(212,82,10,0.15);
+  padding: 12px 22px;
+  font-size: 12px;
+  color: var(--orange);
+  font-family: var(--mono);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* QUESTIONS */
+.questions-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+  box-shadow: 0 1px 6px rgba(28,26,22,0.06);
+  overflow: hidden;
+  display: none;
+}
+.questions-card.show { display: block; }
+.questions-header {
+  padding: 13px 20px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.questions-title { font-family: var(--display); font-size: 14px; font-weight: 700; color: var(--ink); }
+.answered-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--bg2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  color: var(--ink3);
+}
+.q-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 18px; }
+.q-block { display: flex; flex-direction: column; gap: 8px; }
+.q-label { font-family: var(--mono); font-size: 10px; color: var(--teal); letter-spacing: .1em; text-transform: uppercase; }
+.q-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.5; }
+.tf-row { display: flex; gap: 8px; }
+.tf-b {
+  flex: 1;
+  padding: 11px;
+  border-radius: 8px;
+  border: 1.5px solid var(--bg3);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .05em;
+  text-align: center;
+  color: var(--ink2);
+}
+.tf-b:hover:not(:disabled) { border-color: var(--teal2); background: var(--teal-light); color: var(--teal); }
+.tf-b.selected { background: var(--teal-light); border-color: var(--teal2); color: var(--teal); font-weight: 600; }
+.tf-b.correct { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.tf-b.wrong { background: var(--red-light); border-color: var(--red); color: var(--red); }
+.tf-b:disabled { cursor: default; }
+.q-expl {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--teal);
+  background: var(--teal-light);
+  padding: 7px 11px;
+  border-radius: 6px;
+  display: none;
+  line-height: 1.6;
+}
+.q-expl.show { display: block; }
+
+.q-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--bg2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn-auswerten {
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .05em;
+  display: flex; align-items: center; gap: 7px;
+}
+.btn-auswerten:hover { background: var(--teal2); }
+.btn-auswerten:disabled { opacity: .4; cursor: not-allowed; }
+
+/* RESULT */
+.result-strip {
+  padding: 16px 20px;
+  display: none;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid var(--bg2);
+}
+.result-strip.show { display: flex; }
+.result-score { font-family: var(--display); font-size: 28px; font-weight: 800; color: var(--teal); }
+.result-verdict { font-size: 13px; color: var(--ink2); }
+.btn-weiter {
+  margin-left: auto;
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-weiter:hover { background: var(--teal2); }
+
+/* EMPTY / LOADING */
+.empty-state {
+  padding: 52px 24px;
+  text-align: center;
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--bg3);
+}
+.empty-icon { font-size: 44px; margin-bottom: 14px; }
+.empty-title { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--ink2); margin-bottom: 6px; }
+.empty-sub { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
+.btn-gen-main {
+  margin-top: 20px;
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 13px 28px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .06em;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-gen-main:hover { background: var(--teal2); }
+.spinner {
+  width: 30px; height: 30px;
+  border: 2px solid var(--bg2);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-state {
+  padding: 40px;
+  text-align: center;
+  display: none;
+}
+.loading-state.show { display: block; }
+.loading-text { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-wave">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    Hörtrainer <span style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.4);margin-left:6px;letter-spacing:.06em">TELC B2/C1</span>
+  </div>
+  <div class="header-right">
+    <div class="level-toggle">
+      <button class="level-btn active" onclick="setLevel('B2')" id="btn-b2">B2</button>
+      <button class="level-btn" onclick="setLevel('C1')" id="btn-c1">C1</button>
+    </div>
+    <div class="session-info">∑ <span id="sess-score">0</span>/<span id="sess-max">0</span> richtig</div>
+  </div>
+</header>
+
+<main>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="panel">
+      <div class="panel-header">🎧 Aufgabentyp</div>
+      <div class="panel-body">
+        <div class="type-list" id="type-list"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">📋 So funktioniert es</div>
+      <div class="panel-body">
+        <div class="how-list" id="how-list">
+          <div class="how-item">
+            <div class="how-num">1</div>
+            <div class="how-text">Aufgabe generieren — Typ wählen und starten.</div>
+          </div>
+          <div class="how-item">
+            <div class="how-num">2</div>
+            <div class="how-text">Fragen lesen (30 Sek.) — wie in der echten Prüfung.</div>
+          </div>
+          <div class="how-item">
+            <div class="how-num">3</div>
+            <div class="how-text">Abschnitt für Abschnitt aufdecken — wie beim Hören.</div>
+          </div>
+          <div class="how-item">
+            <div class="how-num">4</div>
+            <div class="how-text">Antworten markieren — direkt während/nach dem Lesen.</div>
+          </div>
+          <div class="how-item">
+            <div class="how-num">5</div>
+            <div class="how-text">Auswerten — Sofortkorrektur mit Erklärungen.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">⚠ Prüfungstipp</div>
+      <div class="panel-body" id="tip-body">
+        <p style="font-size:12px;color:var(--ink2);line-height:1.6">In der echten Prüfung hörst du jeden Text <strong>nur einmal</strong>. Lies immer zuerst die Fragen, dann höre (oder lies hier) den Text — nicht umgekehrt!</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- WORKSPACE -->
+  <div class="workspace" id="workspace">
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">🎙</div>
+      <div class="empty-title">Hörverstehen simulieren</div>
+      <div class="empty-sub">Wähle links einen Aufgabentyp und generiere eine Aufgabe</div>
+      <button class="btn-gen-main" onclick="generateTask()">✦ Aufgabe generieren</button>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div class="loading-state" id="loading-state">
+      <div style="background:white;border-radius:var(--radius);padding:40px;border:1px solid var(--bg3)">
+        <div class="spinner"></div>
+        <div class="loading-text">Hörtextaufgabe wird generiert…</div>
+      </div>
+    </div>
+
+    <!-- PLAYER CARD -->
+    <div class="player-card" id="player-card" style="display:none">
+      <div class="player-top">
+        <div class="player-info">
+          <div class="player-label" id="player-label">Hörverstehen · B2 · Teil 1</div>
+          <div class="player-title" id="player-title">—</div>
+        </div>
+        <button class="btn-gen-task" onclick="generateTask()" id="btn-regen">↻ Neu</button>
+      </div>
+
+      <!-- AUFGABE NOTE -->
+      <div class="aufgabe-note" id="aufgabe-note">
+        ⚠ Lies zuerst alle Fragen! Dann decke den Text Abschnitt für Abschnitt auf.
+      </div>
+
+      <!-- TRANSCRIPT -->
+      <div class="transcript-zone">
+        <div class="transcript-header">
+          <div class="transcript-label">Transkript — Abschnitt für Abschnitt aufdecken</div>
+          <div class="reveal-controls" id="reveal-controls"></div>
+        </div>
+        <div class="playhead-bar"><div class="playhead-fill" id="playhead-fill" style="width:0%"></div></div>
+        <div class="transcript-body" id="transcript-body"></div>
+      </div>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="questions-card" id="questions-card">
+      <div class="questions-header">
+        <div class="questions-title">Aufgaben</div>
+        <div class="answered-pill" id="answered-pill">0 / 0 beantwortet</div>
+      </div>
+      <div class="q-list" id="q-list"></div>
+      <div class="q-footer">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--ink3)" id="q-footer-info"></span>
+        <button class="btn-auswerten" onclick="checkAnswers()" id="btn-auswerten" disabled>Auswerten →</button>
+      </div>
+      <div class="result-strip" id="result-strip">
+        <div class="result-score" id="res-score">—</div>
+        <div>
+          <div style="font-family:var(--display);font-weight:700;font-size:15px" id="res-verdict">—</div>
+          <div class="result-verdict" id="res-sub">—</div>
+        </div>
+        <button class="btn-weiter" onclick="generateTask()">Nächste Aufgabe →</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ── STATE ──
+let level = 'B2';
+let selectedType = null;
+let currentTask = null;
+let userAnswers = {};
+let checked = false;
+let revealedCount = 0;
+let sessScore = 0, sessMax = 0;
+
+// ── TYPES ──
+const types = {
+  B2: [
+    { id: 'nachrichten', name: 'Teil 1 — Nachrichten', desc: '6 Radiobeiträge · 5 R/F-Aufgaben' },
+    { id: 'interview',   name: 'Teil 2 — Interview/Gespräch', desc: '10 R/F-Aufgaben · Detailverstehen' },
+    { id: 'ansagen',     name: 'Teil 3 — Ansagen/Durchsagen', desc: '5 selektive R/F-Aufgaben' },
+  ],
+  C1: [
+    { id: 'vortrag',    name: 'Teil 1 — Vortrag/Präsentation', desc: 'Hauptaussagen, Intentionen' },
+    { id: 'interview',  name: 'Teil 2 — Interview', desc: 'Haltungen, Einstellungen, Ton' },
+    { id: 'diskussion', name: 'Teil 3 — Diskussion/Debatte', desc: 'Standpunkte vergleichen' },
+  ]
+};
+
+const tips = {
+  nachrichten: 'Radionachrichten: Themen sind Politik, Wirtschaft, Kultur, Sport. Achte auf den ersten Satz jedes Beitrags — er enthält fast immer die Hauptaussage.',
+  interview:   'Interview: Achte auf Negationen! "Ich glaube nicht, dass..." und "Das stimmt so nicht..." sind typische FALSCH-Fallen.',
+  ansagen:     'Ansagen: Du suchst spezifische Informationen (Zeit, Ort, Preis). Lies die Fragen genau — das Schlüsselwort hilft dir.',
+  vortrag:     'Vortrag C1: Unterscheide zwischen Hauptthese und Nebeninformation. Was ist die zentrale Botschaft des Redners?',
+  diskussion:  'Diskussion C1: Wer sagt was? Achte auf Sprecher-Kennzeichnung und auf Modalpartikeln (doch, eigentlich, immerhin).',
+};
+
+// ── INIT ──
+function init() {
+  renderTypes();
+}
+
+function renderTypes() {
+  const list = document.getElementById('type-list');
+  list.innerHTML = '';
+  types[level].forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'type-item' + (selectedType === t.id ? ' selected' : '');
+    el.innerHTML = `<div class="type-name">${t.name}</div><div class="type-desc">${t.desc}</div>`;
+    el.onclick = () => {
+      selectedType = t.id;
+      renderTypes();
+      const tip = tips[t.id] || tips.nachrichten;
+      document.getElementById('tip-body').innerHTML = `<p style="font-size:12px;color:var(--ink2);line-height:1.6">${tip}</p>`;
+    };
+    list.appendChild(el);
+  });
+}
+
+function setLevel(lvl) {
+  level = lvl;
+  selectedType = null;
+  document.getElementById('btn-b2').classList.toggle('active', lvl==='B2');
+  document.getElementById('btn-c1').classList.toggle('active', lvl==='C1');
+  renderTypes();
+  resetAll();
+}
+
+function resetAll() {
+  document.getElementById('empty-state').style.display = 'block';
+  document.getElementById('player-card').style.display = 'none';
+  document.getElementById('questions-card').classList.remove('show');
+  document.getElementById('loading-state').classList.remove('show');
+  currentTask = null;
+  userAnswers = {};
+  checked = false;
+}
+
+// ── GENERATE ──
+async function generateTask() {
+  if (!selectedType) {
+    selectedType = types[level][0].id;
+    renderTypes();
+  }
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('player-card').style.display = 'none';
+  document.getElementById('questions-card').classList.remove('show');
+  document.getElementById('result-strip').classList.remove('show');
+  document.getElementById('loading-state').classList.add('show');
+  document.getElementById('btn-regen').disabled = true;
+
+  userAnswers = {};
+  checked = false;
+  revealedCount = 0;
+
+  const prompt = buildPrompt(selectedType);
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',
+          'x-api-key': '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',
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 3000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content?.[0]?.text || '';
+    const cleaned = raw.replace(/```json|```/g, '').trim();
+    currentTask = JSON.parse(cleaned);
+    renderTask(currentTask);
+  } catch(e) {
+    console.error(e);
+    document.getElementById('loading-state').classList.remove('show');
+    document.getElementById('empty-state').style.display = 'block';
+    document.getElementById('empty-state').querySelector('.empty-sub').textContent = 'Fehler beim Generieren. Bitte nochmals versuchen.';
+  } finally {
+    document.getElementById('btn-regen').disabled = false;
+  }
+}
+
+function buildPrompt(typeId) {
+  const baseB2 = `Antworte NUR mit gültigem JSON, kein Markdown, kein Text außerhalb.`;
+
+  if (level === 'B2' && typeId === 'nachrichten') {
+    return `Du bist TELC B2 Prüfungsexperte. Erstelle eine Hörverstehen-Teil-1-Aufgabe (Nachrichtensendung).
+${baseB2}
+{
+  "titel": "Nachrichtensendung — Globalverstehen",
+  "typ": "B2 · Hörverstehen Teil 1",
+  "abschnitte": [
+    {"id": 1, "sprecher": "Nachrichtensprecher", "text": "<Kurze Nachrichtenmeldung ca. 60-80 Wörter. Thema: Politik/Wirtschaft/Gesellschaft. Realistisch, wie echte Radionachrichten.>"},
+    {"id": 2, "sprecher": "Nachrichtensprecher", "text": "<Zweite Meldung — anderes Thema: Umwelt/Kultur/Wissenschaft>"},
+    {"id": 3, "sprecher": "Nachrichtensprecher", "text": "<Dritte Meldung — Sport/International>"},
+    {"id": 4, "sprecher": "Nachrichtensprecher", "text": "<Vierte Meldung>"},
+    {"id": 5, "sprecher": "Nachrichtensprecher", "text": "<Fünfte Meldung — kein passende Aufgabe dazu>"},
+    {"id": 6, "sprecher": "Nachrichtensprecher", "text": "<Sechste Meldung>"}
+  ],
+  "aufgaben": [
+    {"id": 41, "aussage": "<Aussage über Meldung 1 — RICHTIG>", "loesung": "+", "erklaerung": "<Im Text steht...>"},
+    {"id": 42, "aussage": "<Aussage über Meldung 2 — FALSCH — leichte Abweichung>", "loesung": "-", "erklaerung": "<Im Text steht tatsächlich...>"},
+    {"id": 43, "aussage": "<Aussage über Meldung 3 — RICHTIG>", "loesung": "+", "erklaerung": "<Im Text steht...>"},
+    {"id": 44, "aussage": "<Aussage über Meldung 4 — FALSCH>", "loesung": "-", "erklaerung": "<...>"},
+    {"id": 45, "aussage": "<Aussage über Meldung 6 — RICHTIG>", "loesung": "+", "erklaerung": "<...>"}
+  ]
+}`;
+  }
+
+  if (level === 'B2' && typeId === 'interview') {
+    return `Du bist TELC B2 Prüfungsexperte. Erstelle eine Hörverstehen-Teil-2-Aufgabe (Interview/Gespräch).
+${baseB2}
+{
+  "titel": "<Interviewtitel — z.B. 'Interview mit einer Sozialunternehmerin'>",
+  "typ": "B2 · Hörverstehen Teil 2",
+  "abschnitte": [
+    {"id": 1, "sprecher": "Moderatorin", "text": "<Einleitung und erste Frage, ca. 40 Wörter>"},
+    {"id": 2, "sprecher": "Gast", "text": "<Antwort ca. 80 Wörter — enthält Infos für Aufgaben 46-48>"},
+    {"id": 3, "sprecher": "Moderatorin", "text": "<Zweite Frage>"},
+    {"id": 4, "sprecher": "Gast", "text": "<Antwort ca. 80 Wörter — Infos für Aufgaben 49-52>"},
+    {"id": 5, "sprecher": "Moderatorin", "text": "<Dritte Frage>"},
+    {"id": 6, "sprecher": "Gast", "text": "<Antwort ca. 80 Wörter — Infos für Aufgaben 53-55>"}
+  ],
+  "aufgaben": [
+    {"id": 46, "aussage": "<Aussage — RICHTIG, Abschnitt 2>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 47, "aussage": "<Aussage — FALSCH, Abschnitt 2>", "loesung": "-", "erklaerung": "<Tatsächlich sagt die Person...>"},
+    {"id": 48, "aussage": "<Aussage — RICHTIG, Abschnitt 2>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 49, "aussage": "<FALSCH, Abschnitt 4>", "loesung": "-", "erklaerung": "<...>"},
+    {"id": 50, "aussage": "<RICHTIG, Abschnitt 4>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 51, "aussage": "<FALSCH, Abschnitt 4>", "loesung": "-", "erklaerung": "<...>"},
+    {"id": 52, "aussage": "<RICHTIG, Abschnitt 4>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 53, "aussage": "<RICHTIG, Abschnitt 6>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 54, "aussage": "<FALSCH, Abschnitt 6>", "loesung": "-", "erklaerung": "<...>"},
+    {"id": 55, "aussage": "<RICHTIG, Abschnitt 6>", "loesung": "+", "erklaerung": "<...>"}
+  ]
+}`;
+  }
+
+  if (level === 'B2' && typeId === 'ansagen') {
+    return `Du bist TELC B2 Prüfungsexperte. Erstelle eine Hörverstehen-Teil-3-Aufgabe (Ansagen/Durchsagen).
+${baseB2}
+{
+  "titel": "Ansagen und Durchsagen — Selektives Verstehen",
+  "typ": "B2 · Hörverstehen Teil 3",
+  "abschnitte": [
+    {"id": 1, "sprecher": "Ansage 1", "text": "<Durchsage/Ansage ca. 50 Wörter — Bahnhof, Flughafen oder ähnlich>"},
+    {"id": 2, "sprecher": "Ansage 2", "text": "<Veranstaltungshinweis ca. 50 Wörter>"},
+    {"id": 3, "sprecher": "Ansage 3", "text": "<Wetterbericht oder Verkehrsmeldung>"},
+    {"id": 4, "sprecher": "Ansage 4", "text": "<Geschäftliche Ansage — Öffnungszeiten, Aktion>"},
+    {"id": 5, "sprecher": "Ansage 5", "text": "<Kurzmeldung Radio>"}
+  ],
+  "aufgaben": [
+    {"id": 56, "aussage": "<Spezifische Aussage über Ansage 1 — RICHTIG>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 57, "aussage": "<Über Ansage 2 — FALSCH>", "loesung": "-", "erklaerung": "<...>"},
+    {"id": 58, "aussage": "<Über Ansage 3 — RICHTIG>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 59, "aussage": "<Über Ansage 4 — FALSCH>", "loesung": "-", "erklaerung": "<...>"},
+    {"id": 60, "aussage": "<Über Ansage 5 — RICHTIG>", "loesung": "+", "erklaerung": "<...>"}
+  ]
+}`;
+  }
+
+  // C1
+  const c1type = typeId === 'vortrag' ? 'Vortrag/Präsentation' : typeId === 'interview' ? 'Interview' : 'Diskussion/Debatte';
+  return `Du bist TELC C1 Hochschule Prüfungsexperte. Erstelle eine Hörverstehen-Aufgabe (${c1type}, C1 Niveau).
+${baseB2}
+{
+  "titel": "<Akademisches Thema — Gesellschaft, Wissenschaft, Kultur>",
+  "typ": "C1 · Hörverstehen · ${c1type}",
+  "abschnitte": [
+    {"id": 1, "sprecher": "${typeId === 'vortrag' ? 'Referent/in' : typeId === 'interview' ? 'Moderator/in' : 'Teilnehmer/in A'}", "text": "<Anspruchsvoller Text ca. 100 Wörter. Akademischer Stil. Nominalisierungen, Konjunktiv, Modalpartikeln.>"},
+    {"id": 2, "sprecher": "${typeId === 'vortrag' ? 'Referent/in' : typeId === 'interview' ? 'Gast' : 'Teilnehmer/in B'}", "text": "<Zweiter Abschnitt ca. 100 Wörter — andere Perspektive oder Vertiefung>"},
+    {"id": 3, "sprecher": "${typeId === 'vortrag' ? 'Referent/in' : typeId === 'interview' ? 'Gast' : 'Teilnehmer/in A'}", "text": "<Dritter Abschnitt ca. 100 Wörter — Schlussfolgerung oder Gegenposition>"}
+  ],
+  "aufgaben": [
+    {"id": 1, "aussage": "<C1-Aussage: Hauptintention des Sprechers — RICHTIG>", "loesung": "+", "erklaerung": "<Der Sprecher deutet durch... an, dass...>"},
+    {"id": 2, "aussage": "<C1-Aussage: implizierte Meinung — FALSCH>", "loesung": "-", "erklaerung": "<Tatsächlich sagt/meint der Sprecher...>"},
+    {"id": 3, "aussage": "<C1-Aussage — RICHTIG>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 4, "aussage": "<C1-Aussage — FALSCH>", "loesung": "-", "erklaerung": "<...>"},
+    {"id": 5, "aussage": "<C1-Aussage — RICHTIG>", "loesung": "+", "erklaerung": "<...>"},
+    {"id": 6, "aussage": "<C1-Aussage — FALSCH>", "loesung": "-", "erklaerung": "<...>"}
+  ]
+}`;
+}
+
+// ── RENDER ──
+function renderTask(task) {
+  document.getElementById('loading-state').classList.remove('show');
+  document.getElementById('player-card').style.display = 'block';
+  document.getElementById('questions-card').classList.add('show');
+  document.getElementById('result-strip').classList.remove('show');
+
+  document.getElementById('player-label').textContent = task.typ;
+  document.getElementById('player-title').textContent = task.titel;
+
+  // Transcript segments
+  const tbody = document.getElementById('transcript-body');
+  tbody.innerHTML = '';
+  task.abschnitte.forEach(a => {
+    const seg = document.createElement('div');
+    seg.className = 'transcript-segment hidden';
+    seg.id = 'seg-' + a.id;
+    seg.innerHTML = `<div class="segment-speaker">[${a.sprecher}] — Abschnitt ${a.id}</div>Abschnitt ${a.id} — klicke auf "Aufdecken" um zu lesen`;
+    seg.dataset.text = a.text;
+    seg.dataset.speaker = a.sprecher;
+    tbody.appendChild(seg);
+  });
+
+  // Reveal controls
+  const controls = document.getElementById('reveal-controls');
+  controls.innerHTML = `
+    <button class="reveal-step-btn" onclick="revealNext()" id="btn-reveal">Aufdecken ▶</button>
+    <button class="reveal-step-btn" onclick="revealAll()" id="btn-reveal-all">Alle aufdecken</button>
+  `;
+  revealedCount = 0;
+  updatePlayhead();
+
+  // Questions
+  renderQuestions(task.aufgaben);
+}
+
+function revealNext() {
+  if (revealedCount >= currentTask.abschnitte.length) return;
+  revealedCount++;
+  const seg = document.getElementById('seg-' + revealedCount);
+  if (seg) {
+    seg.innerHTML = `<div class="segment-speaker">[${seg.dataset.speaker}] — Abschnitt ${revealedCount}</div>${seg.dataset.text}`;
+    seg.classList.remove('hidden');
+    seg.classList.add('revealed');
+    seg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  updatePlayhead();
+  if (revealedCount >= currentTask.abschnitte.length) {
+    document.getElementById('btn-reveal').disabled = true;
+    document.getElementById('btn-reveal').textContent = '✓ Vollständig';
+  }
+}
+
+function revealAll() {
+  while (revealedCount < currentTask.abschnitte.length) revealNext();
+}
+
+function updatePlayhead() {
+  const total = currentTask?.abschnitte?.length || 1;
+  const pct = Math.round(revealedCount / total * 100);
+  document.getElementById('playhead-fill').style.width = pct + '%';
+}
+
+function renderQuestions(aufgaben) {
+  const list = document.getElementById('q-list');
+  list.innerHTML = '';
+  aufgaben.forEach(a => {
+    const block = document.createElement('div');
+    block.className = 'q-block';
+    block.innerHTML = `
+      <div class="q-label">Aufgabe ${a.id}</div>
+      <div class="q-text">${a.aussage}</div>
+      <div class="tf-row">
+        <button class="tf-b" data-q="${a.id}" data-val="+" onclick="pick(this,'${a.id}','+')">+ RICHTIG</button>
+        <button class="tf-b" data-q="${a.id}" data-val="-" onclick="pick(this,'${a.id}','-')">− FALSCH</button>
+      </div>
+      <div class="q-expl" id="expl-${a.id}"></div>
+    `;
+    list.appendChild(block);
+  });
+  updateAnswered();
+}
+
+function pick(btn, qId, val) {
+  if (checked) return;
+  document.querySelectorAll(`[data-q="${qId}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  userAnswers[qId] = val;
+  updateAnswered();
+}
+
+function updateAnswered() {
+  const total = currentTask?.aufgaben?.length || 0;
+  const done = Object.keys(userAnswers).length;
+  document.getElementById('answered-pill').textContent = `${done} / ${total} beantwortet`;
+  document.getElementById('btn-auswerten').disabled = done < total;
+  document.getElementById('q-footer-info').textContent = done < total ? `Noch ${total-done} Aufgabe(n) offen` : 'Alle beantwortet — bereit zur Auswertung';
+}
+
+function checkAnswers() {
+  if (!currentTask) return;
+  checked = true;
+  document.getElementById('btn-auswerten').disabled = true;
+
+  let correct = 0;
+  const total = currentTask.aufgaben.length;
+
+  currentTask.aufgaben.forEach(a => {
+    const qId = String(a.id);
+    const userAns = userAnswers[qId];
+    const isOk = userAns === a.loesung;
+    if (isOk) correct++;
+
+    document.querySelectorAll(`[data-q="${qId}"]`).forEach(b => {
+      b.disabled = true;
+      if (b.dataset.val === a.loesung) b.classList.add('correct');
+      else if (b.dataset.val === userAns && !isOk) b.classList.add('wrong');
+    });
+
+    const expl = document.getElementById('expl-' + qId);
+    if (expl) {
+      expl.textContent = (isOk ? '✓ ' : '✗ Richtig wäre ' + (a.loesung === '+' ? 'RICHTIG' : 'FALSCH') + '. ') + a.erklaerung;
+      expl.classList.add('show');
+    }
+  });
+
+  const pct = Math.round(correct/total*100);
+  const verdict = pct>=80 ? 'Sehr gut!' : pct>=60 ? 'Gut — weiter üben' : 'Mehr Übung nötig';
+
+  document.getElementById('res-score').textContent = correct + '/' + total;
+  document.getElementById('res-verdict').textContent = verdict;
+  document.getElementById('res-sub').textContent = `${pct}% richtig · ${currentTask.typ}`;
+  document.getElementById('res-score').style.color = pct>=80 ? 'var(--green)' : pct>=60 ? 'var(--teal)' : 'var(--red)';
+  document.getElementById('result-strip').classList.add('show');
+
+  sessScore += correct; sessMax += total;
+  document.getElementById('sess-score').textContent = sessScore;
+  document.getElementById('sess-max').textContent = sessMax;
+
+  // Reveal all if not already
+  revealAll();
+  document.getElementById('result-strip').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+init();
+</script>
+</body>
+</html>

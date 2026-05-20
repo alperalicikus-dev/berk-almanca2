@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammatik Trainer — TELC B2/C1</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inconsolata:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --bg4: #2d333b;
+  --line: rgba(255,255,255,0.08);
+  --line2: rgba(255,255,255,0.13);
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #484f58;
+  --cyan: #39d0d0;
+  --cyan2: #76e4e4;
+  --cyan-dim: rgba(57,208,208,0.1);
+  --green: #3fb950;
+  --green-dim: rgba(63,185,80,0.1);
+  --red: #f85149;
+  --red-dim: rgba(248,81,73,0.1);
+  --amber: #d29922;
+  --amber-dim: rgba(210,153,34,0.1);
+  --purple: #bc8cff;
+  --purple-dim: rgba(188,140,255,0.1);
+  --radius: 10px;
+  --mono: 'Inconsolata', monospace;
+  --serif: 'Libre Baskerville', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── HEADER ── */
+header {
+  padding: 0 32px;
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family: var(--serif); font-size: 19px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.logo-bracket { color: var(--cyan); font-size: 22px; }
+.header-right { display: flex; gap: 8px; align-items: center; }
+.level-toggle { display: flex; background: var(--bg3); border-radius: 7px; padding: 3px; gap: 2px; border: 1px solid var(--line); }
+.lvl-btn { padding: 4px 14px; border: none; background: transparent; color: var(--text3); font-family: var(--mono); font-size: 11px; cursor: pointer; border-radius: 5px; transition: all .2s; letter-spacing: .07em; }
+.lvl-btn.active { background: var(--cyan); color: var(--bg); }
+.xp-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.xp-bar-bg { width: 80px; height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+.xp-bar-fill { height: 100%; background: var(--cyan); border-radius: 3px; transition: width .4s; }
+.xp-label { font-family: var(--mono); font-size: 11px; color: var(--cyan); letter-spacing: .04em; }
+
+/* ── LAYOUT ── */
+main { max-width: 1060px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 240px 1fr; gap: 18px; }
+
+/* ── SIDEBAR ── */
+.sidebar { display: flex; flex-direction: column; gap: 12px; }
+.panel { background: var(--bg2); border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; }
+.ph { padding: 10px 15px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); }
+.pb { padding: 12px 15px; }
+
+/* Topic list */
+.topic-list { display: flex; flex-direction: column; gap: 4px; }
+.topic-item { padding: 9px 12px; border-radius: 7px; cursor: pointer; border: 1px solid transparent; transition: all .12s; font-size: 12px; color: var(--text2); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.topic-item:hover { background: var(--bg3); color: var(--text); }
+.topic-item.active { background: var(--cyan-dim); border-color: rgba(57,208,208,.25); color: var(--cyan2); }
+.topic-badge { font-family: var(--mono); font-size: 10px; background: var(--bg4); padding: 2px 7px; border-radius: 10px; color: var(--text3); }
+.topic-item.active .topic-badge { background: rgba(57,208,208,.15); color: var(--cyan); }
+.topic-item.mastered .topic-badge { background: var(--green-dim); color: var(--green); }
+
+/* Streak mini */
+.mini-stats { display: flex; flex-direction: column; gap: 7px; }
+.ms-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+.ms-lbl { color: var(--text2); }
+.ms-val { font-family: var(--mono); font-size: 11px; color: var(--cyan); }
+
+/* ── WORKSPACE ── */
+.workspace { display: flex; flex-direction: column; gap: 16px; }
+
+/* EXERCISE CARD */
+.ex-card { background: var(--bg2); border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; }
+.ex-header { padding: 13px 20px; background: var(--bg3); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.ex-meta { display: flex; flex-direction: column; gap: 2px; }
+.ex-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--cyan); }
+.ex-title { font-family: var(--serif); font-size: 17px; color: var(--text); }
+.btn-new { background: var(--cyan); color: var(--bg); border: none; padding: 8px 16px; border-radius: 7px; font-family: var(--mono); font-size: 11px; font-weight: 600; cursor: pointer; transition: all .15s; letter-spacing: .04em; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.btn-new:hover { background: var(--cyan2); }
+.btn-new:disabled { opacity: .4; cursor: not-allowed; }
+
+/* THEORY BOX */
+.theory-box { background: var(--bg3); border-radius: 8px; border-left: 3px solid var(--cyan); padding: 14px 16px; margin: 16px 20px; font-size: 13px; color: var(--text2); line-height: 1.65; }
+.theory-box h4 { font-family: var(--mono); font-size: 11px; color: var(--cyan); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 8px; }
+.theory-box strong { color: var(--cyan2); }
+.theory-box em { color: var(--amber); font-style: normal; font-family: var(--mono); font-size: 12px; }
+
+/* EXERCISE TYPES */
+.ex-body { padding: 18px 20px; }
+
+/* Lückentext */
+.luecke-text { font-family: var(--serif); font-size: 15px; line-height: 2.2; color: var(--text); }
+.luecke-input {
+  display: inline-block;
+  min-width: 80px;
+  border: none;
+  border-bottom: 2px solid var(--cyan);
+  background: transparent;
+  color: var(--cyan2);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 0 6px;
+  outline: none;
+  text-align: center;
+  transition: border-color .15s;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+.luecke-input:focus { border-color: var(--purple); }
+.luecke-input.correct { border-color: var(--green); color: var(--green); }
+.luecke-input.wrong { border-color: var(--red); color: var(--red); }
+.luecke-input:disabled { cursor: default; }
+
+/* MC */
+.mc-opts { display: flex; flex-direction: column; gap: 7px; }
+.mc-opt { padding: 11px 15px; border-radius: 8px; border: 1px solid var(--line2); background: var(--bg3); font-family: var(--sans); font-size: 13px; cursor: pointer; transition: all .13s; text-align: left; color: var(--text2); display: flex; gap: 10px; align-items: flex-start; }
+.mc-opt:hover:not(:disabled) { border-color: rgba(57,208,208,.3); background: var(--cyan-dim); color: var(--text); }
+.mc-opt.selected { border-color: rgba(57,208,208,.4); background: var(--cyan-dim); color: var(--cyan2); }
+.mc-opt.correct { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+.mc-opt.wrong { border-color: var(--red); background: var(--red-dim); color: var(--red); }
+.mc-opt:disabled { cursor: default; }
+.mc-letter { font-family: var(--mono); font-size: 11px; opacity: .6; flex-shrink: 0; margin-top: 1px; }
+
+/* Umformung */
+.umform-box { background: var(--bg3); border-radius: 8px; border-left: 3px solid var(--amber); padding: 14px 16px; margin-bottom: 14px; }
+.umform-original { font-family: var(--serif); font-size: 15px; color: var(--text); font-style: italic; margin-bottom: 6px; }
+.umform-aufgabe { font-family: var(--mono); font-size: 11px; color: var(--amber); letter-spacing: .05em; }
+.umform-input { width: 100%; background: var(--bg4); border: 1px solid var(--line2); border-radius: 8px; padding: 12px 15px; font-family: var(--mono); font-size: 13px; color: var(--text); outline: none; margin-top: 10px; transition: border-color .15s; }
+.umform-input:focus { border-color: var(--cyan); }
+.umform-input.correct { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+.umform-input.wrong { border-color: var(--red); background: var(--red-dim); color: var(--red); }
+
+/* Explanation */
+.ex-explanation { margin-top: 14px; padding: 12px 14px; background: var(--bg3); border-radius: 8px; font-family: var(--mono); font-size: 12px; color: var(--purple); line-height: 1.65; border-left: 3px solid var(--purple); display: none; }
+.ex-explanation.show { display: block; }
+.ex-explanation strong { color: var(--cyan2); }
+
+/* SCORE STRIP */
+.score-strip { padding: 12px 20px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 14px; }
+.score-pct { font-family: var(--serif); font-size: 26px; font-weight: 700; line-height: 1; }
+.score-pct.great { color: var(--green); }
+.score-pct.ok { color: var(--amber); }
+.score-pct.bad { color: var(--red); }
+.score-lbl { font-size: 13px; color: var(--text2); }
+.btn-check { background: var(--cyan); color: var(--bg); border: none; padding: 10px 22px; border-radius: 8px; font-family: var(--mono); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; letter-spacing: .04em; margin-left: auto; }
+.btn-check:hover { background: var(--cyan2); }
+.btn-check:disabled { opacity: .4; cursor: not-allowed; }
+
+/* LOADING */
+.loading-row { padding: 36px; text-align: center; display: none; }
+.loading-row.show { display: block; }
+.spinner { width:26px;height:26px;border:2px solid var(--line2);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loading-txt { font-family: var(--mono); font-size: 12px; color: var(--text3); }
+
+/* PROGRESS BAR */
+.prog-wrap { height: 3px; background: var(--bg4); border-radius: 0; }
+.prog-fill { height: 100%; background: var(--cyan); transition: width .3s; }
+
+/* THEORY TOGGLE */
+.theory-toggle { font-family: var(--mono); font-size: 11px; color: var(--cyan); cursor: pointer; background: transparent; border: none; padding: 0; letter-spacing: .04em; display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
+.theory-toggle:hover { color: var(--cyan2); }
+.theory-content { display: none; }
+.theory-content.show { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-bracket">{</span>
+    Grammatik<span style="color:var(--cyan)">Trainer</span>
+    <span class="logo-bracket">}</span>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.06em">TELC B2/C1</span>
+  </div>
+  <div class="header-right">
+    <div class="level-toggle">
+      <button class="lvl-btn active" onclick="setLevel('B2')" id="lvl-b2">B2</button>
+      <button class="lvl-btn" onclick="setLevel('C1')" id="lvl-c1">C1</button>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-fill" style="width:0%"></div></div>
+      <div class="xp-label"><span id="xp-val">0</span> XP</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="panel">
+      <div class="ph">📐 Grammatikthemen</div>
+      <div class="pb">
+        <div class="topic-list" id="topic-list"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph">📊 Mein Fortschritt</div>
+      <div class="pb">
+        <div class="mini-stats" id="mini-stats">
+          <div class="ms-row"><span class="ms-lbl">Übungen gesamt</span><span class="ms-val" id="ms-total">0</span></div>
+          <div class="ms-row"><span class="ms-lbl">Richtig</span><span class="ms-val" id="ms-correct">0</span></div>
+          <div class="ms-row"><span class="ms-lbl">Genauigkeit</span><span class="ms-val" id="ms-acc">—</span></div>
+          <div class="ms-row"><span class="ms-lbl">Heute</span><span class="ms-val" id="ms-today">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph">💡 Regel des Tages</div>
+      <div class="pb" id="rule-panel">
+        <p style="font-size:12px;color:var(--text2);line-height:1.6;font-family:var(--sans)">Wähle ein Thema links und generiere eine Aufgabe.</p>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- WORKSPACE -->
+  <div class="workspace">
+
+    <!-- EXERCISE CARD -->
+    <div class="ex-card" id="ex-card">
+      <div class="ex-header">
+        <div class="ex-meta">
+          <div class="ex-label" id="ex-label">Grammatik · B2</div>
+          <div class="ex-title" id="ex-title">Thema wählen und Aufgabe generieren</div>
+        </div>
+        <button class="btn-new" onclick="generateExercise()" id="btn-new">✦ Neue Aufgabe</button>
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+
+      <div class="loading-row" id="ex-loading">
+        <div class="spinner"></div>
+        <div class="loading-txt">Aufgabe wird generiert…</div>
+      </div>
+
+      <div id="ex-content">
+        <div style="padding:40px;text-align:center;color:var(--text3)">
+          <div style="font-size:36px;margin-bottom:12px">📐</div>
+          <div style="font-family:var(--serif);font-size:18px;color:var(--text2);margin-bottom:6px">Grammatik intensiv üben</div>
+          <div style="font-family:var(--mono);font-size:11px">← Thema wählen und Aufgabe generieren</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ── STATE ──
+let level = 'B2';
+let selectedTopic = null;
+let currentEx = null;
+let xp = parseInt(localStorage.getItem('gramm_xp') || '0');
+let stats = JSON.parse(localStorage.getItem('gramm_stats') || '{"total":0,"correct":0,"today":0}');
+let answered = false;
+
+// ── TOPICS ──
+const topicsB2 = [
+  { id: 'konjunktiv2',  label: 'Konjunktiv II',        desc: 'würde, hätte, wäre, könnte…',           level: 'B2' },
+  { id: 'passiv',       label: 'Passiv',                desc: 'Vorgangs- & Zustandspassiv',            level: 'B2' },
+  { id: 'konnektoren',  label: 'Konnektoren',           desc: 'obwohl, trotzdem, sodass, damit…',      level: 'B2' },
+  { id: 'relativsatz',  label: 'Relativsätze',          desc: 'der/die/das · wessen · was/wo',         level: 'B2' },
+  { id: 'modalverben',  label: 'Modalverben',           desc: 'Bedeutungsnuancen & Vergangenheit',     level: 'B2' },
+  { id: 'adjektivdekl', label: 'Adjektivdeklination',   desc: 'stark, schwach, gemischt',              level: 'B2' },
+];
+
+const topicsC1 = [
+  { id: 'partizipial',  label: 'Partizipialkonstruktionen', desc: 'erweiterte Partizipien statt Relativsatz', level: 'C1' },
+  { id: 'nominalisierung', label: 'Nominalisierung',     desc: 'Verb → Substantiv, Adjektiv → Substantiv',  level: 'C1' },
+  { id: 'infinitiv',    label: 'Infinitivkonstruktionen', desc: 'um zu / ohne zu / anstatt zu',        level: 'C1' },
+  { id: 'konjunktiv1',  label: 'Konjunktiv I (indirekte Rede)', desc: 'Berichte, akademische Texte',   level: 'C1' },
+  { id: 'zweiteilig',   label: 'Zweiteilige Konnektoren', desc: 'sowohl…als auch, je…desto…',          level: 'C1' },
+  { id: 'funktionsverb',label: 'Funktionsverbgefüge',    desc: 'in Betracht ziehen, Einfluss nehmen…', level: 'C1' },
+];
+
+const theoryTexts = {
+  konjunktiv2:   { title: 'Konjunktiv II — Bildung & Gebrauch', text: 'Konjunktiv II drückt Irreales, Wünsche und höfliche Bitten aus. <strong>Bildung:</strong> Präteritum-Stamm + Umlaut: <em>wäre, hätte, könnte, würde</em>. <strong>Tipp:</strong> Bei schwachen Verben immer <em>würde + Infinitiv</em> bevorzugen: "Ich würde gehen" (nicht "ich ginge").' },
+  passiv:        { title: 'Passiv — Vorgangs- & Zustandspassiv', text: '<strong>Vorgangspassiv:</strong> werden + Partizip II: <em>Das Buch wird gelesen.</em><br><strong>Zustandspassiv:</strong> sein + Partizip II: <em>Das Buch ist gelesen.</em><br><strong>Agens:</strong> von + Dativ (Personen), durch + Akkusativ (Mittel).' },
+  konnektoren:   { title: 'Konnektoren — Hauptsatz & Nebensatz', text: '<strong>Nebensatzkonnektoren</strong> (Verb am Ende): <em>obwohl, damit, sodass, da, weil, bevor, nachdem…</em><br><strong>Hauptsatzkonnektoren</strong> (Verb an Pos. 2): <em>trotzdem, dennoch, deshalb, außerdem…</em><br><strong>Zweiteilige:</strong> <em>sowohl…als auch, entweder…oder, je…desto</em>' },
+  relativsatz:   { title: 'Relativsätze — Kasus & Relativpronomen', text: 'Relativpronomen richtet sich nach: <strong>1)</strong> Genus des Bezugsworts <strong>2)</strong> Kasus im Relativsatz. Schwierige Fälle: <em>dessen/deren</em> (Genitiv), <em>dem/der/denen</em> (Dativ). Relativpronomen nach Präposition: <em>auf dem, für die, mit denen</em>.' },
+  modalverben:   { title: 'Modalverben — Nuancen & Vergangenheit', text: 'Vergangenheit mit Modalverb: <em>Ich habe arbeiten müssen.</em> (nicht: "gemüsst"!)<br>Subjektive Bedeutung: <em>Er muss krank sein</em> (wahrscheinlich) · <em>Er soll krank sein</em> (angeblich) · <em>Er dürfte krank sein</em> (vielleicht).' },
+  adjektivdekl:  { title: 'Adjektivdeklination', text: '<strong>Stark</strong> (kein Artikel): <em>kalter Kaffee, heiße Milch</em> — Endung trägt Kasus-Info.<br><strong>Schwach</strong> (nach best. Artikel): <em>der kalte Kaffee</em> — nur -e/-en.<br><strong>Gemischt</strong> (nach ein/kein): <em>ein kalter Kaffee</em> — stark im Nom./Akk. Mask./Neutr.' },
+  partizipial:   { title: 'Partizipialkonstruktionen (C1)', text: 'Erweitertes Partizip ersetzt Relativsatz: <em>das von allen erwartete Ergebnis</em> = <em>das Ergebnis, das von allen erwartet wurde</em>.<br><strong>Partizip I</strong> (aktiv, gleichzeitig): <em>der lachende Mann</em><br><strong>Partizip II</strong> (passiv/abgeschlossen): <em>der gelesene Brief</em>' },
+  nominalisierung:{ title: 'Nominalisierung (C1)', text: 'Verben → Substantive (Nominalisierung): <em>entscheiden → die Entscheidung, einführen → die Einführung</em>.<br>Adjektive → Substantive: <em>wichtig → die Wichtigkeit, schnell → die Schnelligkeit</em>.<br>Im akademischen Stil dominieren Nominalisierungen!' },
+  infinitiv:     { title: 'Infinitivkonstruktionen (C1)', text: '<em>um…zu</em>: Zweck/Ziel: "Er lernt, <strong>um</strong> Erfolg <strong>zu</strong> haben."<br><em>ohne…zu</em>: fehlende Handlung: "Er ging, <strong>ohne</strong> zu grüßen."<br><em>anstatt…zu</em>: Alternative: "Er schrieb, <strong>anstatt</strong> zu sprechen."<br>Gleicher Akteur wie im Hauptsatz!' },
+  konjunktiv1:   { title: 'Konjunktiv I — indirekte Rede (C1)', text: '<strong>Bildung:</strong> Infinitivstamm + -e/-est/-e/-en/-et/-en: <em>er habe, sie sei, es gebe</em>.<br>Falls KI = Indikativ → KII verwenden: <em>sie hätten</em>.<br><strong>Verwendung:</strong> Zeitungen, Berichte, akademische Texte. Er sagt, er <em>habe</em> keine Zeit.' },
+  zweiteilig:    { title: 'Zweiteilige Konnektoren (C1)', text: '<em>sowohl…als auch</em>: additiv<br><em>weder…noch</em>: doppelt negativ<br><em>entweder…oder</em>: alternativ<br><em>je…desto/umso</em>: proportional: "Je mehr ich lerne, desto besser werde ich."<br><em>zwar…aber</em>: Einschränkung' },
+  funktionsverb: { title: 'Funktionsverbgefüge (C1)', text: 'Nomen + Verb (statt einfaches Verb): <em>zur Verfügung stellen = verfügbar machen, Einfluss nehmen = beeinflussen, in Betracht ziehen = bedenken, zum Ausdruck bringen = ausdrücken</em>.<br>Typisch für Verwaltung, Wissenschaft, Journalismus.' },
+};
+
+// ── INIT ──
+function init() {
+  renderTopics();
+  updateXP();
+  updateStats();
+}
+
+function setLevel(lvl) {
+  level = lvl;
+  selectedTopic = null;
+  document.getElementById('lvl-b2').classList.toggle('active', lvl==='B2');
+  document.getElementById('lvl-c1').classList.toggle('active', lvl==='C1');
+  renderTopics();
+}
+
+function renderTopics() {
+  const topics = level === 'B2' ? topicsB2 : topicsC1;
+  const gramStats = JSON.parse(localStorage.getItem('gramm_topic_stats') || '{}');
+  document.getElementById('topic-list').innerHTML = topics.map(t => {
+    const ts = gramStats[t.id] || { total: 0, correct: 0 };
+    const mastered = ts.total >= 5 && (ts.correct/ts.total) >= 0.8;
+    const pct = ts.total ? Math.round(ts.correct/ts.total*100) : null;
+    return `
+      <div class="topic-item ${selectedTopic===t.id?'active':''} ${mastered?'mastered':''}" onclick="selectTopic('${t.id}')">
+        <div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:2px">${t.label}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3)">${t.desc}</div>
+        </div>
+        <div class="topic-badge">${mastered?'✓':pct!==null?pct+'%':t.level}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectTopic(id) {
+  selectedTopic = id;
+  renderTopics();
+  // Show theory
+  const theory = theoryTexts[id];
+  if (theory) {
+    document.getElementById('rule-panel').innerHTML = `
+      <div style="font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px">${theory.title}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7">${theory.text}</div>
+    `;
+  }
+}
+
+function updateXP() {
+  document.getElementById('xp-val').textContent = xp;
+  document.getElementById('xp-fill').style.width = Math.min(100, (xp % 100)) + '%';
+}
+
+function updateStats() {
+  document.getElementById('ms-total').textContent = stats.total;
+  document.getElementById('ms-correct').textContent = stats.correct;
+  document.getElementById('ms-acc').textContent = stats.total ? Math.round(stats.correct/stats.total*100)+'%' : '—';
+  document.getElementById('ms-today').textContent = stats.today;
+}
+
+// ── GENERATE ──
+async function generateExercise() {
+  if (!selectedTopic) {
+    // auto-select first
+    const topics = level === 'B2' ? topicsB2 : topicsC1;
+    selectedTopic = topics[0].id;
+    renderTopics();
+    selectTopic(selectedTopic);
+  }
+
+  const allTopics = [...topicsB2, ...topicsC1];
+  const topicObj = allTopics.find(t => t.id === selectedTopic);
+
+  document.getElementById('ex-loading').classList.add('show');
+  document.getElementById('ex-content').innerHTML = '';
+  document.getElementById('btn-new').disabled = true;
+  answered = false;
+
+  const exType = ['luecke', 'mc', 'umformung'][Math.floor(Math.random()*3)];
+  const prompt = buildPrompt(selectedTopic, topicObj?.label, exType);
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1200, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await resp.json();
+    const raw = data.content?.[0]?.text || '';
+    const cleaned = raw.replace(/```json|```/g,'').trim();
+    currentEx = JSON.parse(cleaned);
+    currentEx._type = exType;
+    renderExercise(currentEx);
+    document.getElementById('ex-label').textContent = `Grammatik · ${level} · ${topicObj?.label}`;
+    document.getElementById('ex-title').textContent = currentEx.titel || topicObj?.label;
+  } catch(e) {
+    console.error(e);
+    document.getElementById('ex-content').innerHTML = '<div style="padding:20px;color:var(--red);font-family:var(--mono);font-size:12px">Fehler. Bitte nochmals versuchen.</div>';
+  } finally {
+    document.getElementById('ex-loading').classList.remove('show');
+    document.getElementById('btn-new').disabled = false;
+  }
+}
+
+function buildPrompt(topicId, topicLabel, exType) {
+  const base = `Du bist TELC ${level} Grammatiktrainer. Thema: "${topicLabel}". Niveau: ${level}. Aufgabentyp: ${exType}.`;
+
+  if (exType === 'luecke') {
+    return `${base}
+Erstelle eine Lückentext-Aufgabe (5-7 Lücken) speziell für das Thema "${topicLabel}".
+NUR JSON:
+{
+  "titel": "<Aufgabentitel>",
+  "anweisung": "<Aufgabenstellung auf Deutsch, z.B. 'Ergänzen Sie die Lücken mit der richtigen Form des Konjunktiv II.'>",
+  "saetze": [
+    {
+      "id": 1,
+      "teile": ["<Satzteil vor Lücke>", "<Satzteil nach Lücke>"],
+      "loesung": "<Lösung>",
+      "erklaerung": "<kurze Grammatikerklärung>"
+    },
+    {"id":2,"teile":["<vor>","<nach>"],"loesung":"<Lsg>","erklaerung":"<Erkl>"},
+    {"id":3,"teile":["<vor>","<nach>"],"loesung":"<Lsg>","erklaerung":"<Erkl>"},
+    {"id":4,"teile":["<vor>","<nach>"],"loesung":"<Lsg>","erklaerung":"<Erkl>"},
+    {"id":5,"teile":["<vor>","<nach>"],"loesung":"<Lsg>","erklaerung":"<Erkl>"}
+  ]
+}
+Sätze sollen ${level}-Niveau haben. Lösungen sollen eindeutig sein. Erkläre WARUM das die richtige Form ist.`;
+  }
+
+  if (exType === 'mc') {
+    return `${base}
+Erstelle eine Multiple-Choice-Grammatikaufgabe (5 Fragen) zum Thema "${topicLabel}".
+NUR JSON:
+{
+  "titel": "<Aufgabentitel>",
+  "anweisung": "<Aufgabenstellung>",
+  "fragen": [
+    {
+      "id": 1,
+      "satz": "<Satz mit Lücke [___]>",
+      "optionen": [
+        {"id":"A","text":"<richtige Option>"},
+        {"id":"B","text":"<falsche Option — typischer Fehler>"},
+        {"id":"C","text":"<falsche Option>"},
+        {"id":"D","text":"<falsche Option>"}
+      ],
+      "loesung": "A",
+      "erklaerung": "<Warum A richtig ist — Regelhinweis>"
+    },
+    {"id":2,"satz":"<...>","optionen":[{"id":"A","text":"<A>"},{"id":"B","text":"<B>"},{"id":"C","text":"<C>"},{"id":"D","text":"<D>"}],"loesung":"B","erklaerung":"<...>"},
+    {"id":3,"satz":"<...>","optionen":[{"id":"A","text":"<A>"},{"id":"B","text":"<B>"},{"id":"C","text":"<C>"},{"id":"D","text":"<D>"}],"loesung":"C","erklaerung":"<...>"},
+    {"id":4,"satz":"<...>","optionen":[{"id":"A","text":"<A>"},{"id":"B","text":"<B>"},{"id":"C","text":"<C>"},{"id":"D","text":"<D>"}],"loesung":"A","erklaerung":"<...>"},
+    {"id":5,"satz":"<...>","optionen":[{"id":"A","text":"<A>"},{"id":"B","text":"<B>"},{"id":"C","text":"<C>"},{"id":"D","text":"<D>"}],"loesung":"D","erklaerung":"<...>"}
+  ]
+}`;
+  }
+
+  // umformung
+  return `${base}
+Erstelle eine Umformungsaufgabe (5 Sätze) zum Thema "${topicLabel}". Der Schüler muss den Satz grammatisch umformen.
+NUR JSON:
+{
+  "titel": "<Aufgabentitel>",
+  "anweisung": "<z.B. 'Formen Sie die Relativsätze in Partizipialkonstruktionen um.'>",
+  "aufgaben": [
+    {
+      "id": 1,
+      "original": "<Original-Satz>",
+      "aufgabe": "<konkrete Umformungsanweisung für diesen Satz>",
+      "loesung": "<korrekte Umformung>",
+      "erklaerung": "<Grammatikregel und Hinweis>"
+    },
+    {"id":2,"original":"<...>","aufgabe":"<...>","loesung":"<...>","erklaerung":"<...>"},
+    {"id":3,"original":"<...>","aufgabe":"<...>","loesung":"<...>","erklaerung":"<...>"},
+    {"id":4,"original":"<...>","aufgabe":"<...>","loesung":"<...>","erklaerung":"<...>"},
+    {"id":5,"original":"<...>","aufgabe":"<...>","loesung":"<...>","erklaerung":"<...>"}
+  ]
+}`;
+}
+
+// ── RENDER ──
+function renderExercise(ex) {
+  const content = document.getElementById('ex-content');
+  let html = '';
+
+  // Theory toggle
+  const theory = theoryTexts[selectedTopic];
+  if (theory) {
+    html += `
+      <div style="padding:12px 20px 0">
+        <button class="theory-toggle" onclick="toggleTheory()">▶ <span id="theory-btn-lbl">Grammatikregel anzeigen</span></button>
+        <div class="theory-content" id="theory-content">
+          <div class="theory-box">
+            <h4>${theory.title}</h4>
+            ${theory.text}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (ex._type === 'luecke') {
+    html += `
+      <div class="ex-body">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.06em;margin-bottom:12px">${ex.anweisung}</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          ${ex.saetze.map(s => `
+            <div style="background:var(--bg3);border-radius:8px;padding:12px 16px;border:1px solid var(--line)">
+              <div style="font-family:var(--mono);font-size:10px;color:var(--cyan);margin-bottom:7px;letter-spacing:.08em">SATZ ${s.id}</div>
+              <div class="luecke-text">
+                ${s.teile[0]}<input class="luecke-input" id="luecke-${s.id}" data-sol="${s.loesung.replace(/"/g,'&quot;')}" style="width:${Math.max(80, s.loesung.length*12)}px" placeholder="…">${s.teile[1] || ''}
+              </div>
+              <div class="ex-explanation" id="expl-${s.id}"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else if (ex._type === 'mc') {
+    html += `
+      <div class="ex-body">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.06em;margin-bottom:14px">${ex.anweisung}</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          ${ex.fragen.map(q => `
+            <div>
+              <div style="font-family:var(--serif);font-size:15px;color:var(--text);margin-bottom:10px;line-height:1.5">${q.satz.replace('[___]', '<span style="color:var(--cyan);font-family:var(--mono)">[___]</span>')}</div>
+              <div class="mc-opts" id="opts-${q.id}">
+                ${q.optionen.map(o => `
+                  <button class="mc-opt" data-q="${q.id}" data-val="${o.id}" data-correct="${o.id===q.loesung}"
+                    onclick="pickMC(this,'${q.id}','${o.id}',${o.id===q.loesung},'${q.erklaerung.replace(/'/g,"\\'")}')">
+                    <span class="mc-letter">${o.id}</span>${o.text}
+                  </button>
+                `).join('')}
+              </div>
+              <div class="ex-explanation" id="expl-${q.id}"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    html += `
+      <div class="ex-body">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.06em;margin-bottom:14px">${ex.anweisung}</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          ${ex.aufgaben.map(a => `
+            <div class="umform-box">
+              <div class="umform-original">${a.original}</div>
+              <div class="umform-aufgabe">↳ ${a.aufgabe}</div>
+              <input class="umform-input" id="umform-${a.id}" data-sol="${a.loesung.replace(/"/g,'&quot;')}" placeholder="Deine Umformung…">
+              <div class="ex-explanation" id="expl-u-${a.id}"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  html += `
+    <div class="score-strip" id="score-strip">
+      <div id="score-display" style="display:none">
+        <div class="score-pct" id="score-pct">—</div>
+        <div class="score-lbl" id="score-lbl">—</div>
+      </div>
+      <button class="btn-check" onclick="checkAnswers()" id="btn-check" style="margin-left:auto">Auswerten →</button>
+    </div>
+  `;
+
+  content.innerHTML = html;
+  document.getElementById('prog-fill').style.width = '30%';
+}
+
+function toggleTheory() {
+  const c = document.getElementById('theory-content');
+  const lbl = document.getElementById('theory-btn-lbl');
+  const show = c.classList.toggle('show');
+  lbl.textContent = show ? 'Grammatikregel verbergen' : 'Grammatikregel anzeigen';
+  document.querySelector('.theory-toggle').querySelector(':first-child').textContent = show ? '▼' : '▶';
+}
+
+function pickMC(btn, qId, val, correct, expl) {
+  if (answered) return;
+  document.querySelectorAll(`.mc-opt[data-q="${qId}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ── CHECK ──
+function checkAnswers() {
+  if (answered) { generateExercise(); return; }
+  answered = true;
+  let correct = 0, total = 0;
+
+  if (currentEx._type === 'luecke') {
+    currentEx.saetze.forEach(s => {
+      total++;
+      const inp = document.getElementById('luecke-' + s.id);
+      const val = inp?.value?.trim().toLowerCase();
+      const sol = s.loesung.toLowerCase();
+      const ok = val === sol || val.replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss') === sol.replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss');
+      if (ok) { correct++; inp.classList.add('correct'); }
+      else { inp.classList.add('wrong'); inp.value = inp.value; }
+      inp.disabled = true;
+      const expEl = document.getElementById('expl-' + s.id);
+      if (expEl) {
+        expEl.innerHTML = (ok ? '✓ Richtig! ' : `✗ Lösung: <strong>${s.loesung}</strong>. `) + s.erklaerung;
+        expEl.classList.add('show');
+      }
+    });
+  } else if (currentEx._type === 'mc') {
+    currentEx.fragen.forEach(q => {
+      total++;
+      const selected = document.querySelector(`.mc-opt[data-q="${q.id}"].selected`);
+      const ok = selected && selected.dataset.correct === 'true';
+      if (ok) correct++;
+      document.querySelectorAll(`.mc-opt[data-q="${q.id}"]`).forEach(b => {
+        b.disabled = true;
+        if (b.dataset.correct === 'true') b.classList.add('correct');
+        else if (b.classList.contains('selected') && !ok) b.classList.add('wrong');
+      });
+      const expEl = document.getElementById('expl-' + q.id);
+      if (expEl) { expEl.innerHTML = (ok?'✓ Richtig! ':'✗ ') + q.erklaerung; expEl.classList.add('show'); }
+    });
+  } else {
+    currentEx.aufgaben.forEach(a => {
+      total++;
+      const inp = document.getElementById('umform-' + a.id);
+      const val = inp?.value?.trim().toLowerCase();
+      const sol = a.loesung.toLowerCase();
+      const ok = val === sol || (val.length > 5 && sol.includes(val.slice(0, Math.floor(val.length*.7))));
+      if (ok) { correct++; inp?.classList.add('correct'); }
+      else inp?.classList.add('wrong');
+      if (inp) inp.disabled = true;
+      const expEl = document.getElementById('expl-u-' + a.id);
+      if (expEl) {
+        expEl.innerHTML = (ok ? '✓ Gut! ' : `✗ Lösung: <strong>${a.loesung}</strong>. `) + a.erklaerung;
+        expEl.classList.add('show');
+      }
+    });
+  }
+
+  const pct = total ? Math.round(correct/total*100) : 0;
+  const scoreEl = document.getElementById('score-pct');
+  const lblEl = document.getElementById('score-lbl');
+  scoreEl.textContent = `${correct}/${total}`;
+  scoreEl.className = 'score-pct ' + (pct>=80?'great':pct>=50?'ok':'bad');
+  lblEl.textContent = pct>=80 ? 'Ausgezeichnet!' : pct>=50 ? 'Gut — weiter üben' : 'Noch mehr Übung nötig';
+  document.getElementById('score-display').style.display = 'block';
+  document.getElementById('btn-check').textContent = '↻ Neue Aufgabe';
+  document.getElementById('prog-fill').style.width = '100%';
+
+  // Save stats
+  stats.total += total;
+  stats.correct += correct;
+  stats.today++;
+  localStorage.setItem('gramm_stats', JSON.stringify(stats));
+  const topicStats = JSON.parse(localStorage.getItem('gramm_topic_stats') || '{}');
+  if (!topicStats[selectedTopic]) topicStats[selectedTopic] = {total:0,correct:0};
+  topicStats[selectedTopic].total += total;
+  topicStats[selectedTopic].correct += correct;
+  localStorage.setItem('gramm_topic_stats', JSON.stringify(topicStats));
+
+  xp += correct * 5;
+  localStorage.setItem('gramm_xp', xp);
+  updateXP();
+  updateStats();
+  renderTopics();
+}
+
+init();
+</script>
+</body>
+</html>

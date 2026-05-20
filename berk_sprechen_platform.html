@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprechen Trainer — TELC B2/C1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1e1b2e;
+  --bg2: #252239;
+  --bg3: #2e2a42;
+  --bg4: #372f50;
+  --line: rgba(255,255,255,0.07);
+  --line2: rgba(255,255,255,0.13);
+  --text: #e2ddf5;
+  --text2: #9e97c0;
+  --text3: #645e88;
+  --violet: #9b8ff5;
+  --violet2: #c4baff;
+  --violet-dim: rgba(155,143,245,0.12);
+  --rose: #f07575;
+  --rose-dim: rgba(240,117,117,0.12);
+  --mint: #52c9a0;
+  --mint-dim: rgba(82,201,160,0.12);
+  --amber: #f0b96a;
+  --amber-dim: rgba(240,185,106,0.12);
+  --radius: 12px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Space Grotesk', sans-serif;
+  --display: 'Fraunces', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* HEADER */
+header {
+  padding: 14px 32px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-mic {
+  width: 28px; height: 28px;
+  background: var(--violet);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  animation: pulse-mic 2.5s ease-in-out infinite;
+}
+@keyframes pulse-mic {
+  0%,100% { box-shadow: 0 0 0 0 rgba(155,143,245,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(155,143,245,0); }
+}
+.header-right { display: flex; gap: 8px; align-items: center; }
+.level-toggle { display: flex; background: var(--bg3); border-radius: 8px; padding: 3px; gap: 2px; border: 1px solid var(--line); }
+.level-btn {
+  padding: 5px 16px; border: none; background: transparent;
+  color: var(--text3); font-family: var(--mono); font-size: 11px; font-weight: 700;
+  cursor: pointer; border-radius: 6px; transition: all .2s; letter-spacing: .08em;
+}
+.level-btn.active { background: var(--violet); color: var(--bg); }
+.phase-indicator {
+  background: var(--bg3);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--violet2);
+  letter-spacing: .06em;
+}
+
+/* LAYOUT */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 20px;
+}
+
+/* SIDEBAR */
+.sidebar { display: flex; flex-direction: column; gap: 14px; }
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.panel-header {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.panel-body { padding: 14px 16px; }
+
+/* PHASE NAV */
+.phase-list { display: flex; flex-direction: column; gap: 5px; }
+.phase-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all .15s;
+  display: flex; align-items: center; gap: 10px;
+}
+.phase-item:hover { background: var(--bg3); }
+.phase-item.active { background: var(--violet-dim); border-color: var(--violet); }
+.phase-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--bg4);
+  flex-shrink: 0;
+  transition: background .2s;
+}
+.phase-item.active .phase-dot { background: var(--violet); }
+.phase-item.done .phase-dot { background: var(--mint); }
+.phase-name { font-size: 12px; font-weight: 600; color: var(--text2); }
+.phase-item.active .phase-name { color: var(--violet2); }
+.phase-sub { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+/* SCORE PANEL */
+.score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.score-cell {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.score-num { font-family: var(--display); font-size: 22px; color: var(--violet2); font-weight: 600; }
+.score-lbl { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: .05em; }
+
+/* WORKSPACE */
+.workspace { display: flex; flex-direction: column; gap: 18px; }
+
+/* STEP CARD */
+.step-card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.step-header {
+  padding: 15px 22px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.step-meta { flex: 1; }
+.step-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 4px;
+}
+.step-title {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.btn-gen {
+  background: var(--violet);
+  color: var(--bg);
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .04em;
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.btn-gen:hover { background: var(--violet2); }
+.btn-gen:disabled { opacity: .4; cursor: not-allowed; }
+
+.step-body { padding: 20px 22px; }
+
+/* THEMA CARD */
+.thema-box {
+  background: var(--bg3);
+  border-radius: 10px;
+  border-left: 4px solid var(--violet);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.thema-title {
+  font-family: var(--display);
+  font-size: 17px;
+  color: var(--violet2);
+  font-style: italic;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.thema-context {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+/* ZITAT */
+.zitat-box {
+  background: var(--bg3);
+  border-radius: 10px;
+  border: 1px solid var(--line2);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.zitat-mark {
+  font-family: var(--display);
+  font-size: 56px;
+  line-height: 1;
+  color: var(--violet);
+  opacity: .25;
+  position: absolute;
+  top: 8px; left: 14px;
+}
+.zitat-text {
+  font-family: var(--display);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--violet2);
+  line-height: 1.6;
+  padding-left: 20px;
+  padding-top: 10px;
+  margin-bottom: 6px;
+}
+.zitat-source { font-family: var(--mono); font-size: 11px; color: var(--text3); padding-left: 20px; }
+
+/* LEITPUNKTE */
+.leitpunkte { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.leitpunkt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.lp-num {
+  width: 22px; height: 22px;
+  background: var(--violet-dim);
+  border: 1px solid var(--violet);
+  color: var(--violet2);
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.lp-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* PREP AREA */
+.prep-section { display: flex; flex-direction: column; gap: 12px; }
+.prep-label { font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
+.prep-textarea {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--line2);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  resize: vertical;
+  min-height: 120px;
+  outline: none;
+  line-height: 1.7;
+  transition: border-color .15s;
+}
+.prep-textarea:focus { border-color: var(--violet); }
+.prep-textarea::placeholder { color: var(--text3); font-style: italic; }
+
+/* REDEMITTEL */
+.redemittel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.rm-group { background: var(--bg3); border-radius: 8px; padding: 12px 14px; border: 1px solid var(--line); }
+.rm-title { font-family: var(--mono); font-size: 10px; color: var(--violet); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+.rm-item {
+  font-size: 12px;
+  color: var(--text2);
+  padding: 3px 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: color .1s;
+  line-height: 1.5;
+}
+.rm-item:last-child { border-bottom: none; }
+.rm-item:hover { color: var(--violet2); }
+
+/* AI FEEDBACK */
+.ai-feedback {
+  background: var(--bg3);
+  border-radius: 10px;
+  border: 1px solid var(--line2);
+  overflow: hidden;
+  margin-top: 14px;
+  display: none;
+}
+.ai-feedback.show { display: block; }
+.ai-feedback-header {
+  padding: 12px 16px;
+  background: var(--violet-dim);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--violet2);
+  letter-spacing: .05em;
+}
+.ai-feedback-body { padding: 16px; font-size: 13px; color: var(--text2); line-height: 1.7; }
+.ai-feedback-body strong { color: var(--violet2); }
+
+/* SCORE CARD */
+.score-card {
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
+  display: none;
+}
+.score-card.show { display: block; }
+.score-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.score-bar-row { display: flex; flex-direction: column; gap: 3px; }
+.sbar-label { display: flex; justify-content: space-between; font-size: 11px; font-family: var(--mono); color: var(--text3); }
+.sbar-label .val { color: var(--violet2); }
+.sbar-bg { height: 5px; background: var(--bg4); border-radius: 3px; }
+.sbar-fill { height: 5px; border-radius: 3px; background: var(--violet); transition: width .6s; }
+
+/* BTNS */
+.btn-primary {
+  background: var(--violet);
+  color: var(--bg);
+  border: none;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .04em;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.btn-primary:hover { background: var(--violet2); }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--line2);
+  color: var(--text2);
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-outline:hover { border-color: var(--violet); color: var(--violet2); }
+
+/* LOADING */
+.loading-row {
+  padding: 32px;
+  text-align: center;
+  display: none;
+}
+.loading-row.show { display: block; }
+.spinner { width:28px;height:28px;border:2px solid var(--line2);border-top-color:var(--violet);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-txt { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+/* TIMER */
+.prep-timer {
+  background: var(--bg4);
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.timer-val {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--violet2);
+  letter-spacing: .05em;
+}
+.timer-label { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+.timer-ctrl { display: flex; gap: 6px; }
+.timer-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line2);
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.timer-btn:hover { background: var(--violet-dim); border-color: var(--violet); color: var(--violet); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mic">🎤</div>
+    Sprechtrainer <span style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:6px;letter-spacing:.06em">TELC B2/C1</span>
+  </div>
+  <div class="header-right">
+    <div class="level-toggle">
+      <button class="level-btn active" onclick="setLevel('B2')" id="btn-b2">B2</button>
+      <button class="level-btn" onclick="setLevel('C1')" id="btn-c1">C1</button>
+    </div>
+    <div class="phase-indicator" id="phase-indicator">Phase 1 / 3</div>
+  </div>
+</header>
+
+<main>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="panel">
+      <div class="panel-header">🗺 Prüfungsphasen</div>
+      <div class="panel-body">
+        <div class="phase-list" id="phase-list"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">📊 Mein Fortschritt</div>
+      <div class="panel-body">
+        <div class="score-grid">
+          <div class="score-cell"><div class="score-num" id="stat-sessions">0</div><div class="score-lbl">Übungen</div></div>
+          <div class="score-cell"><div class="score-num" id="stat-avg">—</div><div class="score-lbl">Ø Punkte</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">💡 Tipp der Stunde</div>
+      <div class="panel-body" id="tip-panel">
+        <p style="font-size:12px;color:var(--text2);line-height:1.6">Spreche immer <strong style="color:var(--violet2)">zum Partner</strong>, nicht zum Prüfer. Eine natürliche Interaktion zählt als Stärke!</p>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- WORKSPACE -->
+  <div class="workspace" id="workspace">
+
+    <div class="step-card" id="main-card">
+      <div class="step-header">
+        <div class="step-meta">
+          <div class="step-label" id="step-label">Mündlicher Ausdruck · B2</div>
+          <div class="step-title" id="step-title">Aufgabe auswählen</div>
+        </div>
+        <button class="btn-gen" onclick="generateTask()" id="btn-gen">✦ Neue Aufgabe</button>
+      </div>
+
+      <div class="loading-row" id="loading-row">
+        <div class="spinner"></div>
+        <div class="loading-txt">Aufgabe wird vorbereitet…</div>
+      </div>
+
+      <div class="step-body" id="step-body">
+        <p style="color:var(--text3);font-size:14px;font-style:italic">← Klicke auf eine Phase links, dann „Neue Aufgabe" um zu starten.</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ── STATE ──
+let level = 'B2';
+let currentPhase = 1;
+let currentTask = null;
+let timerInterval = null;
+let timerSecs = 0;
+let timerRunning = false;
+let stats = JSON.parse(localStorage.getItem('sprechen_stats') || '{"sessions":0,"scores":[]}');
+
+// ── PHASES ──
+const phases = {
+  B2: [
+    { id: 1, name: 'Teil 1 — Erfahrungen', sub: '~2 Min · persönliche Erfahrung erzählen', tip: 'Erzähle eine konkrete Geschichte. Wann? Wo? Was ist passiert? Wie hast du dich gefühlt? Nutze Vergangenheitsformen.' },
+    { id: 2, name: 'Teil 2 — Diskussion', sub: '~5 Min · Meinungen austauschen', tip: 'Drücke Zustimmung und Widerspruch aus. Nicht nur deine Meinung, sondern auch auf Partner eingehen: "Das sehe ich ähnlich, aber..."' },
+    { id: 3, name: 'Teil 3 — Gemeinsam planen', sub: '~5 Min · eine Aufgabe lösen', tip: 'Schlage Optionen vor, frag nach Meinung des Partners, komme zu einer gemeinsamen Entscheidung. "Was hältst du davon, wenn wir..."' },
+  ],
+  C1: [
+    { id: 1, name: 'Teil 1 — Präsentation', sub: '~2 Min · Vortrag zu einem Thema', tip: 'Struktur: These → 2-3 Argumente → Beispiel → Fazit. Nutze Nominalisierungen und akademischen Stil.' },
+    { id: 2, name: 'Teil 2 — Zitat diskutieren', sub: '~6 Min · Zitat + 4 Leitpunkte', tip: 'Interpretiere zuerst das Zitat. Dann positioniere dich: Stimme zu? Widersprichst du? Nenne Beispiele. Gehe auf Partner ein.' },
+    { id: 3, name: 'Fragen stellen', sub: 'Partner-Präsentation zusammenfassen', tip: 'Beim Zuhören: Notiere die Hauptthese, 1-2 Argumente, und bereite 1-2 echte Fragen vor.' },
+  ]
+};
+
+// ── INIT ──
+function init() {
+  renderPhases();
+  updateStats();
+}
+
+function renderPhases() {
+  const list = document.getElementById('phase-list');
+  list.innerHTML = '';
+  phases[level].forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'phase-item' + (currentPhase === p.id ? ' active' : '');
+    el.innerHTML = `
+      <div class="phase-dot"></div>
+      <div>
+        <div class="phase-name">${p.name}</div>
+        <div class="phase-sub">${p.sub}</div>
+      </div>
+    `;
+    el.onclick = () => {
+      currentPhase = p.id;
+      renderPhases();
+      updateTip(p.tip);
+      document.getElementById('phase-indicator').textContent = `Phase ${p.id} / ${phases[level].length}`;
+      resetWorkspace();
+    };
+    list.appendChild(el);
+  });
+}
+
+function updateTip(tip) {
+  document.getElementById('tip-panel').innerHTML = `<p style="font-size:12px;color:var(--text2);line-height:1.6">${tip}</p>`;
+}
+
+function setLevel(lvl) {
+  level = lvl;
+  currentPhase = 1;
+  document.getElementById('btn-b2').classList.toggle('active', lvl==='B2');
+  document.getElementById('btn-c1').classList.toggle('active', lvl==='C1');
+  renderPhases();
+  resetWorkspace();
+}
+
+function resetWorkspace() {
+  const phaseObj = phases[level].find(p=>p.id===currentPhase);
+  document.getElementById('step-label').textContent = `Mündlicher Ausdruck · ${level} · ${phaseObj?.name||''}`;
+  document.getElementById('step-title').textContent = 'Neue Aufgabe generieren';
+  document.getElementById('step-body').innerHTML = `<p style="color:var(--text3);font-size:14px;font-style:italic">Klicke auf „Neue Aufgabe" um eine TELC-Aufgabe für diese Phase zu generieren.</p>`;
+  currentTask = null;
+  stopTimer();
+}
+
+function updateStats() {
+  document.getElementById('stat-sessions').textContent = stats.sessions;
+  if (stats.scores.length) {
+    document.getElementById('stat-avg').textContent = Math.round(stats.scores.reduce((a,b)=>a+b,0)/stats.scores.length) + '%';
+  }
+}
+
+// ── GENERATE ──
+async function generateTask() {
+  const phaseObj = phases[level].find(p=>p.id===currentPhase);
+  document.getElementById('loading-row').classList.add('show');
+  document.getElementById('step-body').innerHTML = '';
+  document.getElementById('btn-gen').disabled = true;
+  stopTimer();
+
+  const prompt = buildPrompt();
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        messages: [{role:'user', content: prompt}]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content?.[0]?.text || '';
+    const cleaned = raw.replace(/```json|```/g,'').trim();
+    currentTask = JSON.parse(cleaned);
+    renderTask(currentTask);
+  } catch(e) {
+    console.error(e);
+    document.getElementById('step-body').innerHTML = '<p style="color:var(--rose);font-size:13px">Fehler beim Generieren. Bitte nochmals versuchen.</p>';
+  } finally {
+    document.getElementById('loading-row').classList.remove('show');
+    document.getElementById('btn-gen').disabled = false;
+  }
+}
+
+function buildPrompt() {
+  if (level === 'B2' && currentPhase === 1) {
+    return `TELC B2 Sprechen Teil 1: Über Erfahrungen sprechen. Erstelle eine authentische Aufgabe.
+NUR JSON:
+{
+  "titel": "<Thema: persönliche Erfahrung, z.B. Ein unvergessliches Erlebnis>",
+  "impuls": "<1-2 Sätze Kontext — was wurde erlebt? Alltag, Reise, Schule, Arbeit>",
+  "leitfragen": ["<Frage 1: Was ist passiert?>", "<Frage 2: Wie hast du dich gefühlt?>", "<Frage 3: Was hast du gelernt?>"],
+  "zeitvorgabe": "ca. 2 Minuten",
+  "musterstichworte": ["<Stichwort 1>", "<Stichwort 2>", "<Stichwort 3>", "<Stichwort 4>", "<Stichwort 5>"],
+  "redemittel": {
+    "erzählen": ["Als ich ..., habe ich ...", "Es begann damit, dass ...", "Ich erinnere mich gut daran, dass ..."],
+    "gefühle": ["Ich war überrascht/begeistert/enttäuscht, weil ...", "Das hat mich sehr beeindruckt, weil ...", "Zunächst war ich unsicher, aber dann ..."],
+    "abschluss": ["Rückblickend denke ich, dass ...", "Diese Erfahrung hat mir gezeigt, dass ...", "Seitdem ..."]
+  }
+}`;
+  }
+
+  if (level === 'B2' && currentPhase === 2) {
+    return `TELC B2 Sprechen Teil 2: Diskussion. Erstelle eine authentische Diskussionsaufgabe.
+NUR JSON:
+{
+  "titel": "<Diskussionsthema — gesellschaftlich relevant>",
+  "these": "<Kontroverse Aussage zum Diskutieren — 1 Satz>",
+  "aspekte": ["<Pro-Argument 1>", "<Pro-Argument 2>", "<Kontra-Argument 1>", "<Kontra-Argument 2>"],
+  "zeitvorgabe": "ca. 5 Minuten",
+  "redemittel": {
+    "meinung": ["Meiner Meinung nach ...", "Ich bin der Ansicht, dass ...", "Ich finde, dass ..."],
+    "zustimmung": ["Das sehe ich genauso.", "Da haben Sie recht.", "Ich stimme dir völlig zu, allerdings ..."],
+    "widerspruch": ["Das sehe ich anders.", "Ich bezweifle, dass ...", "Im Gegensatz dazu ..."],
+    "nachfragen": ["Was meinen Sie damit genau?", "Könnten Sie das näher erläutern?", "Wie stehen Sie dazu?"]
+  }
+}`;
+  }
+
+  if (level === 'B2' && currentPhase === 3) {
+    return `TELC B2 Sprechen Teil 3: Gemeinsam planen. Erstelle eine authentische Planungsaufgabe.
+NUR JSON:
+{
+  "titel": "<Was muss geplant werden?>",
+  "situation": "<2 Sätze Kontext — für welchen Anlass, was soll organisiert werden>",
+  "aufgabe": "Einigt euch auf einen konkreten Plan.",
+  "optionen": ["<Option A>", "<Option B>", "<Option C>", "<Option D>"],
+  "einschraenkungen": ["<Bedingung 1 — z.B. Budget>", "<Bedingung 2>"],
+  "zeitvorgabe": "ca. 5 Minuten",
+  "redemittel": {
+    "vorschlaege": ["Wie wäre es, wenn wir ...?", "Ich schlage vor, dass ...", "Was hältst du von ...?"],
+    "reaktionen": ["Das klingt gut, aber ...", "Das wäre eine Möglichkeit.", "Ich bin nicht sicher, ob ..."],
+    "entscheidung": ["Dann sind wir uns einig, dass ...", "Wir haben uns entschieden für ...", "Das scheint die beste Lösung zu sein."]
+  }
+}`;
+  }
+
+  if (level === 'C1' && currentPhase === 1) {
+    return `TELC C1 Sprechen Teil 1: Präsentation. Erstelle eine authentische C1-Präsentationsaufgabe.
+NUR JSON:
+{
+  "titel": "<Präsentationsthema — akademisch/gesellschaftlich, eine Frage oder These>",
+  "themenauswahl": ["<Thema A>", "<Thema B>"],
+  "struktur": ["These formulieren", "Argument 1 mit Beispiel", "Argument 2 mit Beleg", "Gegenargument nennen", "Fazit und persönliche Stellungnahme"],
+  "zeitvorgabe": "ca. 2 Minuten",
+  "sprachliche_mittel": {
+    "einleitung": ["In meinem Vortrag möchte ich ... beleuchten.", "Diese Frage ist besonders relevant, weil ...", "Meine These lautet: ..."],
+    "argumentation": ["Erstens lässt sich feststellen, dass ...", "Ein weiterer Aspekt ist ...", "Als Beleg dafür dient ..."],
+    "schluss": ["Zusammenfassend lässt sich sagen, dass ...", "Meiner Einschätzung nach ...", "Diese Entwicklung zeigt, dass ..."]
+  },
+  "bewertungskriterien": ["Strukturiertheit (Einleitung/Hauptteil/Schluss)", "Argumentation mit Belegen", "Breite des Wortschatzes", "Grammatische Korrektheit", "Flüssigkeit und Natürlichkeit"]
+}`;
+  }
+
+  if (level === 'C1' && currentPhase === 2) {
+    return `TELC C1 Sprechen Teil 2: Zitat diskutieren. Erstelle eine authentische C1-Diskussionsaufgabe mit Zitat.
+NUR JSON:
+{
+  "zitat": "<Provokantes Zitat von Schriftsteller, Wissenschaftler oder Politiker — 1-2 Sätze>",
+  "autor": "<Name, Beruf, Epoche>",
+  "leitpunkte": [
+    "<Leitpunkt 1: Wie verstehst du das Zitat?>",
+    "<Leitpunkt 2: Stimme zu oder widersprichst du? Warum?>",
+    "<Leitpunkt 3: Welche aktuellen Beispiele gibt es?>",
+    "<Leitpunkt 4: Was sind die gesellschaftlichen Konsequenzen?>"
+  ],
+  "zeitvorgabe": "ca. 6 Minuten",
+  "sprachliche_mittel": {
+    "interpretation": ["Das Zitat lässt sich so verstehen, dass ...", "Der Autor meint damit wohl ...", "Im übertragenen Sinne bedeutet das ..."],
+    "position": ["Ich teile diese Ansicht, weil ...", "Diese Aussage ist aus meiner Sicht problematisch, denn ...", "Wenngleich ein Kern Wahrheit darin steckt, ..."],
+    "beispiele": ["Ein aktuelles Beispiel hierfür wäre ...", "Dies zeigt sich besonders deutlich an ...", "Man denke nur an ..."]
+  }
+}`;
+  }
+
+  // C1 Phase 3 — Partnerfragen
+  return `TELC C1 Sprechen Teil 1C / 3: Partnerpräsentation. Erstelle eine Aufgabe zum aktiven Zuhören und Fragen stellen.
+NUR JSON:
+{
+  "titel": "Aktives Zuhören — Zusammenfassen und Nachfragen",
+  "anleitung": "Du hörst jetzt die Präsentation deines Partners. Fasse danach die Hauptthese in 2-3 Sätzen zusammen. Stelle dann 1-2 Vertiefungsfragen.",
+  "muster_praesentation": "<Kurze Beispielpräsentation zu einem Thema, ca. 5-6 Sätze, die du laut lesen und dann kommentieren kannst>",
+  "zusammenfassungsstruktur": ["Die Hauptthese lautet ...", "Als Argumente nennt der/die Referent/in ...", "Als Fazit stellt er/sie fest, dass ..."],
+  "fragentypen": ["Vertiefungsfrage: 'Sie haben erwähnt, dass ... Könnten Sie das näher erläutern?'", "Kritische Frage: 'Wie erklären Sie, dass ... im Widerspruch zu ... steht?'", "Persönliche Frage: 'Welche persönliche Erfahrung hat Sie zu dieser These geführt?'"],
+  "zeitvorgabe": "2-3 Minuten",
+  "bewertungskriterien": ["Korrekte Wiedergabe der Hauptaussage", "Relevanz der Fragen", "Angemessenes Sprachniveau C1"]
+}`;
+}
+
+// ── RENDER ──
+function renderTask(task) {
+  const body = document.getElementById('step-body');
+  const phaseObj = phases[level].find(p=>p.id===currentPhase);
+  document.getElementById('step-title').textContent = task.titel;
+
+  let html = '';
+
+  // --- B2 PHASE 1 ---
+  if (level === 'B2' && currentPhase === 1) {
+    html = `
+      <div class="thema-box">
+        <div class="thema-title">${task.titel}</div>
+        <div class="thema-context">${task.impuls}</div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div class="prep-label" style="margin-bottom:8px">Leitfragen (zu behandeln):</div>
+        ${task.leitfragen.map((f,i) => `<div class="leitpunkt"><div class="lp-num">${i+1}</div><div class="lp-text">${f}</div></div>`).join('')}
+      </div>
+      <div class="prep-timer" id="prep-timer">
+        <div>
+          <div class="timer-val" id="timer-val">01:20</div>
+          <div class="timer-label">Vorbereitungszeit (20 Min) → Sprechen (2 Min)</div>
+        </div>
+        <div class="timer-ctrl">
+          <button class="timer-btn" onclick="startTimer(80)">▶ Start</button>
+          <button class="timer-btn" onclick="stopTimer()">■ Stop</button>
+          <button class="timer-btn" onclick="startTimer(120)">🎤 2 Min</button>
+        </div>
+      </div>
+      ${renderRedemittel(task.redemittel)}
+      <div class="prep-section">
+        <div class="prep-label">Deine Stichpunkte / Notizen:</div>
+        <textarea class="prep-textarea" id="notizen" placeholder="Notiere hier deine Hauptpunkte auf Deutsch… (Stichwörter reichen)"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn-primary" onclick="getAIFeedback()">KI-Feedback holen →</button>
+        <button class="btn-outline" onclick="generateTask()">↻ Neues Thema</button>
+      </div>
+      <div class="ai-feedback" id="ai-feedback">
+        <div class="ai-feedback-header">🤖 KI-Feedback zu deinen Notizen</div>
+        <div class="ai-feedback-body" id="ai-feedback-body"></div>
+      </div>
+    `;
+  }
+
+  // --- B2 PHASE 2 ---
+  else if (level === 'B2' && currentPhase === 2) {
+    html = `
+      <div class="thema-box">
+        <div class="thema-title">${task.these}</div>
+        <div class="thema-context" style="margin-top:8px;font-style:italic;color:var(--text3)">${task.titel}</div>
+      </div>
+      <div class="prep-label" style="margin-bottom:8px">Aspekte (Pro & Kontra):</div>
+      <div class="leitpunkte">
+        ${task.aspekte.map((a,i) => `<div class="leitpunkt"><div class="lp-num">${i%2===0?'+'+'':'-'}</div><div class="lp-text">${a}</div></div>`).join('')}
+      </div>
+      ${renderRedemittel(task.redemittel)}
+      <div class="prep-section">
+        <div class="prep-label">Deine Position und Argumente:</div>
+        <textarea class="prep-textarea" id="notizen" placeholder="Ich bin der Meinung, dass… Weil… Aber andererseits…"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn-primary" onclick="getAIFeedback()">KI-Feedback →</button>
+        <button class="btn-outline" onclick="generateTask()">↻ Neues Thema</button>
+      </div>
+      <div class="ai-feedback" id="ai-feedback">
+        <div class="ai-feedback-header">🤖 KI-Feedback zu deiner Argumentation</div>
+        <div class="ai-feedback-body" id="ai-feedback-body"></div>
+      </div>
+    `;
+  }
+
+  // --- B2 PHASE 3 ---
+  else if (level === 'B2' && currentPhase === 3) {
+    html = `
+      <div class="thema-box">
+        <div class="thema-title">${task.situation}</div>
+        <div class="thema-context" style="margin-top:6px"><strong style="color:var(--violet2)">Aufgabe:</strong> ${task.aufgabe}</div>
+      </div>
+      <div class="prep-label" style="margin-bottom:8px">Optionen zur Auswahl:</div>
+      <div class="leitpunkte">
+        ${task.optionen.map((o,i) => `<div class="leitpunkt"><div class="lp-num">${['A','B','C','D'][i]}</div><div class="lp-text">${o}</div></div>`).join('')}
+      </div>
+      <div class="prep-label" style="margin:14px 0 8px">Einschränkungen:</div>
+      ${task.einschraenkungen.map(e=>`<div style="font-size:13px;color:var(--rose);margin-bottom:4px">⚠ ${e}</div>`).join('')}
+      ${renderRedemittel(task.redemittel)}
+      <div class="prep-section" style="margin-top:14px">
+        <div class="prep-label">Dein Planungsvorschlag:</div>
+        <textarea class="prep-textarea" id="notizen" placeholder="Ich schlage vor, dass wir… Was hältst du von Option…? Wir könnten uns einigen auf…"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn-primary" onclick="getAIFeedback()">KI-Feedback →</button>
+        <button class="btn-outline" onclick="generateTask()">↻ Neue Aufgabe</button>
+      </div>
+      <div class="ai-feedback" id="ai-feedback">
+        <div class="ai-feedback-header">🤖 KI-Feedback</div>
+        <div class="ai-feedback-body" id="ai-feedback-body"></div>
+      </div>
+    `;
+  }
+
+  // --- C1 PHASE 1 ---
+  else if (level === 'C1' && currentPhase === 1) {
+    html = `
+      <div style="margin-bottom:14px">
+        <div class="prep-label" style="margin-bottom:8px">Themenauswahl (wähle eines):</div>
+        ${task.themenauswahl.map((t,i) => `
+          <div class="leitpunkt" style="cursor:pointer" onclick="selectThema(this,'${t.replace(/'/g,"\\'")}')">
+            <div class="lp-num">${['A','B'][i]}</div>
+            <div class="lp-text" style="font-weight:500">${t}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="prep-label" style="margin-bottom:8px">Präsentationsstruktur:</div>
+      <div class="leitpunkte">
+        ${(task.struktur||[]).map((s,i)=>`<div class="leitpunkt"><div class="lp-num">${i+1}</div><div class="lp-text">${s}</div></div>`).join('')}
+      </div>
+      <div class="prep-timer">
+        <div>
+          <div class="timer-val" id="timer-val">20:00</div>
+          <div class="timer-label">Vorbereitungszeit (20 Min) → dann Präsentation (2 Min)</div>
+        </div>
+        <div class="timer-ctrl">
+          <button class="timer-btn" onclick="startTimer(1200)">▶ Vorbereitung</button>
+          <button class="timer-btn" onclick="startTimer(120)">🎤 2 Min</button>
+          <button class="timer-btn" onclick="stopTimer()">■ Stop</button>
+        </div>
+      </div>
+      ${renderRedemittel(task.sprachliche_mittel)}
+      <div class="prep-section">
+        <div class="prep-label">Deine Gliederung / Stichwörter:</div>
+        <textarea class="prep-textarea" id="notizen" placeholder="These: … &#10;Argument 1: … Beispiel: … &#10;Argument 2: … &#10;Gegenargument: … &#10;Fazit: …" style="min-height:150px"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn-primary" onclick="getAIFeedback()">Gliederung bewerten lassen →</button>
+        <button class="btn-outline" onclick="generateTask()">↻ Neue Themen</button>
+      </div>
+      <div class="ai-feedback" id="ai-feedback">
+        <div class="ai-feedback-header">🤖 KI-Feedback zur Gliederung</div>
+        <div class="ai-feedback-body" id="ai-feedback-body"></div>
+      </div>
+    `;
+  }
+
+  // --- C1 PHASE 2 ---
+  else if (level === 'C1' && currentPhase === 2) {
+    html = `
+      <div class="zitat-box">
+        <div class="zitat-mark">"</div>
+        <div class="zitat-text">${task.zitat}</div>
+        <div class="zitat-source">— ${task.autor}</div>
+      </div>
+      <div class="prep-label" style="margin-bottom:8px">Leitpunkte (alle behandeln):</div>
+      <div class="leitpunkte">
+        ${task.leitpunkte.map((l,i)=>`<div class="leitpunkt"><div class="lp-num">${i+1}</div><div class="lp-text">${l}</div></div>`).join('')}
+      </div>
+      ${renderRedemittel(task.sprachliche_mittel)}
+      <div class="prep-section">
+        <div class="prep-label">Deine Analyse und Position:</div>
+        <textarea class="prep-textarea" id="notizen" placeholder="Das Zitat bedeutet… &#10;Ich stimme zu/widerspreche, weil… &#10;Aktuelles Beispiel: … &#10;Konsequenz: …" style="min-height:160px"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn-primary" onclick="getAIFeedback()">KI-Feedback holen →</button>
+        <button class="btn-outline" onclick="generateTask()">↻ Neues Zitat</button>
+      </div>
+      <div class="ai-feedback" id="ai-feedback">
+        <div class="ai-feedback-header">🤖 KI-Feedback zur Zitatanalyse</div>
+        <div class="ai-feedback-body" id="ai-feedback-body"></div>
+      </div>
+    `;
+  }
+
+  // --- C1 PHASE 3 ---
+  else {
+    html = `
+      <div class="thema-box">
+        <div class="thema-title">${task.titel}</div>
+        <div class="thema-context">${task.anleitung}</div>
+      </div>
+      <div class="prep-label" style="margin-bottom:8px">Beispielpräsentation (laut lesen):</div>
+      <div style="background:var(--bg4);border-radius:8px;padding:14px 16px;margin-bottom:14px;font-style:italic;font-size:13px;color:var(--text2);border:1px solid var(--line2);line-height:1.7">${task.muster_praesentation}</div>
+      <div class="prep-label" style="margin-bottom:8px">Zusammenfassungsstruktur:</div>
+      <div class="leitpunkte">
+        ${task.zusammenfassungsstruktur.map((z,i)=>`<div class="leitpunkt"><div class="lp-num">${i+1}</div><div class="lp-text">${z}</div></div>`).join('')}
+      </div>
+      <div class="prep-section" style="margin-top:14px">
+        <div class="prep-label">Deine Zusammenfassung + Fragen:</div>
+        <textarea class="prep-textarea" id="notizen" placeholder="Zusammenfassung: … &#10;Meine Frage 1: … &#10;Meine Frage 2: …"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn-primary" onclick="getAIFeedback()">KI-Feedback →</button>
+        <button class="btn-outline" onclick="generateTask()">↻ Neue Aufgabe</button>
+      </div>
+      <div class="ai-feedback" id="ai-feedback">
+        <div class="ai-feedback-header">🤖 KI-Feedback</div>
+        <div class="ai-feedback-body" id="ai-feedback-body"></div>
+      </div>
+    `;
+  }
+
+  body.innerHTML = html;
+}
+
+function renderRedemittel(rm) {
+  if (!rm) return '';
+  const entries = Object.entries(rm);
+  if (!entries.length) return '';
+  return `
+    <div style="margin:14px 0">
+      <div class="prep-label" style="margin-bottom:8px">Redemittel (klicken zum Kopieren):</div>
+      <div class="redemittel-grid">
+        ${entries.map(([k,v]) => `
+          <div class="rm-group">
+            <div class="rm-title">${k}</div>
+            ${v.map(r=>`<div class="rm-item" onclick="copyText('${r.replace(/'/g,"\\'")}', this)">${r}</div>`).join('')}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function copyText(text, el) {
+  navigator.clipboard?.writeText(text).catch(()=>{});
+  const orig = el.style.color;
+  el.style.color = 'var(--mint)';
+  setTimeout(() => el.style.color = orig, 800);
+}
+
+function selectThema(el, thema) {
+  document.querySelectorAll('.leitpunkt[style*="cursor:pointer"]').forEach(e => e.style.background='');
+  el.style.background = 'var(--violet-dim)';
+  const notizen = document.getElementById('notizen');
+  if (notizen) notizen.placeholder = `These zu: ${thema}\nArgument 1: …\nArgument 2: …\nFazit: …`;
+}
+
+// ── AI FEEDBACK ──
+async function getAIFeedback() {
+  const notizen = document.getElementById('notizen')?.value?.trim();
+  if (!notizen || notizen.length < 20) {
+    return alert('Bitte schreibe zuerst deine Notizen / Stichwörter.');
+  }
+
+  const fbEl = document.getElementById('ai-feedback');
+  const fbBody = document.getElementById('ai-feedback-body');
+  fbEl.classList.add('show');
+  fbBody.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--text3);font-family:var(--mono);font-size:12px"><div class="spinner" style="width:18px;height:18px;margin:0"></div> Analysiere…</div>';
+
+  const phaseObj = phases[level].find(p=>p.id===currentPhase);
+  const prompt = `Du bist TELC ${level} Sprechen-Coach. Der Schüler hat folgende Notizen/Stichwörter für ${phaseObj?.name} vorbereitet:
+
+"${notizen}"
+
+Aufgabe: ${currentTask?.titel || currentTask?.zitat || currentTask?.these || ''}
+
+Gib kurzes, konkretes Feedback auf Deutsch (3-5 Punkte):
+1. Was ist gut?
+2. Was fehlt noch?
+3. Welche Redemittel sollte er auf jeden Fall benutzen?
+4. Sprachliche Verbesserung (1 konkretes Beispiel)
+
+Sei direkt, freundlich, präzise. Kein langer Text — Stichwörter genügen.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:600,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text || 'Keine Antwort erhalten.';
+    fbBody.innerHTML = text.replace(/\n/g,'<br>');
+
+    // Save stats
+    stats.sessions++;
+    stats.scores.push(70); // rough placeholder
+    if (stats.scores.length > 30) stats.scores = stats.scores.slice(-30);
+    localStorage.setItem('sprechen_stats', JSON.stringify(stats));
+    updateStats();
+  } catch(e) {
+    fbBody.innerHTML = '<span style="color:var(--rose)">Fehler. Bitte nochmals versuchen.</span>';
+  }
+}
+
+// ── TIMER ──
+function startTimer(secs) {
+  stopTimer();
+  timerSecs = secs;
+  timerRunning = true;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerSecs--;
+    updateTimerDisplay();
+    if (timerSecs <= 0) { stopTimer(); document.getElementById('timer-val').textContent = '00:00'; }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerRunning = false;
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timer-val');
+  if (!el) return;
+  const m = Math.floor(timerSecs/60).toString().padStart(2,'0');
+  const s = (timerSecs%60).toString().padStart(2,'0');
+  el.textContent = `${m}:${s}`;
+  el.style.color = timerSecs < 30 ? 'var(--rose)' : 'var(--violet2)';
+}
+
+init();
+</script>
+</body>
+</html>
