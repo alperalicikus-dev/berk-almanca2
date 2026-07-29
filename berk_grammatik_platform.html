@@ -385,9 +385,9 @@ async function generateExercise() {
   const prompt = buildPrompt(selectedTopic, topicObj?.label, exType);
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://berk-almanca-api.alperalicikus.workers.dev', {, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1200, messages:[{role:'user',content:prompt}] })
+      body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1200, messages:[{role:'user',content:prompt}] })
     });
     const data = await resp.json();
     const raw = data.content?.[0]?.text || '';
