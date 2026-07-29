@@ -609,7 +609,7 @@ async function generateTask() {
   const prompt = buildPrompt();
 
   try {
-    fetch('https://berk-almanca-api.alperalicikus.workers.dev', {
+    const resp = await fetch('https://berk-almanca-api.alperalicikus.workers.dev', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
@@ -1002,7 +1002,7 @@ Gib kurzes, konkretes Feedback auf Deutsch (3-5 Punkte):
 Sei direkt, freundlich, präzise. Kein langer Text — Stichwörter genügen.`;
 
   try {
-    fetch('https://berk-almanca-api.alperalicikus.workers.dev', {
+    const resp = await fetch('https://berk-almanca-api.alperalicikus.workers.dev', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
