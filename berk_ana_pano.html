@@ -714,11 +714,11 @@ Antworte NUR mit diesem JSON:
 }`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://berk-almanca-api.alperalicikus.workers.dev', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 800,
         messages: [{role:'user',content:prompt}]
       })
@@ -803,11 +803,11 @@ NUR JSON:
 }`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://berk-almanca-api.alperalicikus.workers.dev', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-sonnet-4-6',,
         max_tokens:200,
         messages:[{role:'user',content:prompt}]
       })
